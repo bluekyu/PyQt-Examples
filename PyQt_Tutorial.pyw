@@ -9,13 +9,13 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# 레이블에 포맷 지정
+# 닫기 버튼 추가 
 
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.4.3"
+__version__ = "1.5.1"
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -24,14 +24,20 @@ class Form(QDialog):
         self.label = QLabel("Hello, PyQt!")
         
         self.lineEdit = QLineEdit("This is LineEdit Widget")
+
+        closeButton = QPushButton("닫기(&C)")
+        closeButton.setAutoDefault(False)
         
         layout = QVBoxLayout()
         layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
+        layout.addWidget(closeButton)
         self.setLayout(layout)
 
         self.connect(self.lineEdit, SIGNAL("returnPressed()"),
                         self.UpdateLabel)
+        self.connect(closeButton, SIGNAL("clicked()"),
+                        self, SLOT("reject()"))
 
         self.setWindowTitle("Main Dialog")
 
