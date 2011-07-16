@@ -9,13 +9,13 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# 창 제목 지정
+# 라인 에디터 추가.
 
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.3.2"
+__version__ = "1.4.1"
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -23,8 +23,11 @@ class Form(QDialog):
 
         self.label = QLabel("Hello, PyQt!")
         
+        self.lineEdit = QLineEdit("This is LineEdit Widget")
+        
         layout = QVBoxLayout()
         layout.addWidget(self.label)
+        layout.addWidget(self.lineEdit)
 
         self.setLayout(layout)
         self.setWindowTitle("Main Dialog")
