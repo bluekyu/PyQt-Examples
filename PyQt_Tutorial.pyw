@@ -9,13 +9,13 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# 라인 에디터 입력 시 레이블 변경
+# 레이블에 포맷 지정
 
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.4.2"
+__version__ = "1.4.3"
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -36,7 +36,8 @@ class Form(QDialog):
         self.setWindowTitle("Main Dialog")
 
     def UpdateLabel(self):
-        self.label.setText(self.lineEdit.text())
+        self.label.setText("<font color=red><b>" + self.lineEdit.text() +
+                            "</b></font>")
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
