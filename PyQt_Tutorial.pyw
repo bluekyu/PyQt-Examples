@@ -9,15 +9,27 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# 처음 시작하는 프로그램. 레이블 자체를 프로그램으로 실행
+# Form 클래스 내에 레이블을 설정
 
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.2.1"
+__version__ = "1.3.1"
 
-app = QApplication(sys.argv)
-form = QLabel("Hello, PyQt!")
-form.show()
-app.exec_()
+class Form(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        self.label = QLabel("Hello, PyQt!")
+        
+        layout = QVBoxLayout()
+        layout.addWidget(self.label)
+
+        self.setLayout(layout)
+    
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    form = Form()
+    form.show()
+    app.exec_()
