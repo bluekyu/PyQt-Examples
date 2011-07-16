@@ -9,13 +9,13 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# 초기화 추가 및 버튼 레이아웃 추가
+# 버튼 공백 추가
 
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.6.2"
+__version__ = "1.6.3"
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -33,6 +33,7 @@ class Form(QDialog):
         
         buttonLayout = QHBoxLayout()
         buttonLayout.addWidget(initButton)
+        buttonLayout.addStretch()
         buttonLayout.addWidget(closeButton)
 
         layout = QGridLayout()
