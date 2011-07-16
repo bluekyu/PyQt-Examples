@@ -9,13 +9,13 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# 라인 에디터 추가.
+# 라인 에디터 입력 시 레이블 변경
 
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.4.1"
+__version__ = "1.4.2"
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -28,9 +28,15 @@ class Form(QDialog):
         layout = QVBoxLayout()
         layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
-
         self.setLayout(layout)
+
+        self.connect(self.lineEdit, SIGNAL("returnPressed()"),
+                        self.UpdateLabel)
+
         self.setWindowTitle("Main Dialog")
+
+    def UpdateLabel(self):
+        self.label.setText(self.lineEdit.text())
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
