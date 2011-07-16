@@ -9,28 +9,30 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# 닫기 버튼 추가 
+# 체크 박스 추가
 
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.5.1"
+__version__ = "1.5.2"
 
 class Form(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
 
         self.label = QLabel("Hello, PyQt!")
-        
-        self.lineEdit = QLineEdit("This is LineEdit Widget")
+        self.labelFormat = "{}"
 
+        self.lineEdit = QLineEdit("This is LineEdit Widget")
+        self.boldCheckBox = QCheckBox("굵게(&B)")
         closeButton = QPushButton("닫기(&C)")
         closeButton.setAutoDefault(False)
         
         layout = QVBoxLayout()
         layout.addWidget(self.label)
         layout.addWidget(self.lineEdit)
+        layout.addWidget(self.boldCheckBox)
         layout.addWidget(closeButton)
         self.setLayout(layout)
 
@@ -38,12 +40,20 @@ class Form(QDialog):
                         self.UpdateLabel)
         self.connect(closeButton, SIGNAL("clicked()"),
                         self, SLOT("reject()"))
+        self.connect(self.boldCheckBox, SIGNAL("stateChanged(int)"),
+                        self.LabelBold)
 
         self.setWindowTitle("Main Dialog")
 
     def UpdateLabel(self):
-        self.label.setText("<font color=red><b>" + self.lineEdit.text() +
-                            "</b></font>")
+        self.label.setText(self.labelFormat.format(self.lineEdit.text()))
+
+    def LabelBold(self):
+        if self.boldCheckBox.isChecked():
+            self.labelFormat = "<b>{}</b>"
+        else:
+            self.labelFormat = "{}"
+        self.UpdateLabel()
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
