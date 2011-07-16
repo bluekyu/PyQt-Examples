@@ -9,13 +9,13 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# Form 클래스 내에 레이블을 설정
+# 창 제목 지정
 
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.3.1"
+__version__ = "1.3.2"
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -27,6 +27,7 @@ class Form(QDialog):
         layout.addWidget(self.label)
 
         self.setLayout(layout)
+        self.setWindowTitle("Main Dialog")
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
