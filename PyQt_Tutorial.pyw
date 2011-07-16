@@ -9,13 +9,13 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# 수평 레이아웃으로 변경
+# 초기화 추가 및 버튼 레이아웃 추가
 
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.6.1"
+__version__ = "1.6.2"
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -26,20 +26,27 @@ class Form(QDialog):
 
         self.lineEdit = QLineEdit("This is LineEdit Widget")
         self.boldCheckBox = QCheckBox("굵게(&B)")
+        initButton = QPushButton("초기화(&I)")
+        initButton.setAutoDefault(False)
         closeButton = QPushButton("닫기(&C)")
         closeButton.setAutoDefault(False)
         
-        layout = QHBoxLayout()
-        layout.addWidget(self.label)
-        layout.addWidget(self.lineEdit)
-        layout.addWidget(self.boldCheckBox)
-        layout.addWidget(closeButton)
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addWidget(initButton)
+        buttonLayout.addWidget(closeButton)
+
+        layout = QGridLayout()
+        layout.addWidget(self.label, 0, 0, 1, 2)
+        layout.addWidget(self.lineEdit, 1, 0, 1, 2)
+        layout.addWidget(self.boldCheckBox, 2, 0)
+        layout.addLayout(buttonLayout, 3, 0)
         self.setLayout(layout)
 
         self.connect(self.lineEdit, SIGNAL("returnPressed()"),
                         self.UpdateLabel)
         self.connect(self.boldCheckBox, SIGNAL("stateChanged(int)"),
                         self.LabelBold)
+        self.connect(initButton, SIGNAL("clicked()"), self.Initialize)
         self.connect(closeButton, SIGNAL("clicked()"),
                         self, SLOT("reject()"))
 
@@ -54,6 +61,12 @@ class Form(QDialog):
         else:
             self.labelFormat = "{}"
         self.UpdateLabel()
+
+    def Initialize(self):
+        self.labelFormat = "{}"
+        self.boldCheckBox.setCheckState(Qt.Unchecked)
+        self.lineEdit.setText("This is LineEdit Widget")
+        self.label.setText("Hello, PyQt!")
     
 if __name__ == "__main__":
     app = QApplication(sys.argv)
