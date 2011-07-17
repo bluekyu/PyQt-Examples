@@ -9,13 +9,14 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# 다양한 시그널 및 슬록 추가
+# Connect 구분 방법 (partial) 추가
 
 import sys
+from functools import partial
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.7.1"
+__version__ = "1.8.1"
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -55,10 +56,26 @@ class Form(QDialog):
         signal_layout.addWidget(signal_spinBox)
         signal_layout.addStretch()
 
+        connect_partName = QLabel("Connect Test")
+        self.connect_label = QLabel("Button Name")
+        connect_button1 = QPushButton("Button1")
+        connect_button2 = QPushButton("Button2")
+        connect_button3 = QPushButton("Button3")
+
+        connect_layout = QVBoxLayout()
+        connect_layout.addWidget(connect_partName)
+        connect_layout.addWidget(self.connect_label)
+        connect_layout.addWidget(connect_button1)
+        connect_layout.addWidget(connect_button2)
+        connect_layout.addWidget(connect_button3)
+        connect_layout.addStretch()
+
         layout = QHBoxLayout()
         layout.addLayout(simple_layout)
         layout.addSpacing(30)
         layout.addLayout(signal_layout)
+        layout.addSpacing(30)
+        layout.addLayout(connect_layout)
 
         self.setLayout(layout)
 
@@ -67,12 +84,20 @@ class Form(QDialog):
         self.connect(self.simple_boldCheckBox, SIGNAL("stateChanged(int)"),
                         self.Simple_LabelBold)
         self.connect(simple_initButton, SIGNAL("clicked()"), self.Simple_Initialize)
+        
         self.connect(signal_spinBox, SIGNAL("countup(QString)"), 
                         signal_spinCountLabel1, SLOT("setText(QString)"))
         self.connect(signal_spinBox, SIGNAL("countup(QString)"), 
                         signal_spinCountLabel2.setText)
         self.connect(signal_spinBox, SIGNAL("countup"), 
                         signal_spinCountLabel3.setText)
+
+        self.connect(connect_button1, SIGNAL("clicked()"),
+                        partial(self.Connect_ButtonClick, "Button1"))
+        self.connect(connect_button2, SIGNAL("clicked()"),
+                        partial(self.Connect_ButtonClick, "Button2"))
+        self.connect(connect_button3, SIGNAL("clicked()"),
+                        partial(self.Connect_ButtonClick, "Button3"))
 
         self.setWindowTitle("Main Dialog")
 
@@ -92,6 +117,9 @@ class Form(QDialog):
         self.simple_boldCheckBox.setCheckState(Qt.Unchecked)
         self.simple_lineEidt.setText("This is LineEdit Widget")
         self.simple_label.setText("Hello, PyQt!")
+
+    def Connect_ButtonClick(self, buttonName):
+        self.connect_label.setText(buttonName)
     
 class MySignalSpinBox(QSpinBox):
     changedCount = 0
