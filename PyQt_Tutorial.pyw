@@ -9,13 +9,13 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# Connect 구분 방법 (lambda) 변경
+# Connect 구분 방법 (sendor) 변경
 
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.8.2"
+__version__ = "1.8.3"
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -92,11 +92,11 @@ class Form(QDialog):
                         signal_spinCountLabel3.setText)
 
         self.connect(connect_button1, SIGNAL("clicked()"),
-                lambda name="Button1": self.Connect_ButtonClick(name))
+                        self.Connect_ButtonClick)
         self.connect(connect_button2, SIGNAL("clicked()"),
-                lambda name="Button2": self.Connect_ButtonClick(name))
+                        self.Connect_ButtonClick)
         self.connect(connect_button3, SIGNAL("clicked()"),
-                lambda name="Button3": self.Connect_ButtonClick(name))
+                        self.Connect_ButtonClick)
 
         self.setWindowTitle("Main Dialog")
 
@@ -117,8 +117,11 @@ class Form(QDialog):
         self.simple_lineEidt.setText("This is LineEdit Widget")
         self.simple_label.setText("Hello, PyQt!")
 
-    def Connect_ButtonClick(self, buttonName):
-        self.connect_label.setText(buttonName)
+    def Connect_ButtonClick(self):
+        button = self.sender()
+        if not (button and isinstance(button, QPushButton)):
+            return
+        self.connect_label.setText(button.text())
     
 class MySignalSpinBox(QSpinBox):
     changedCount = 0
