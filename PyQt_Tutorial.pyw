@@ -9,14 +9,13 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# Connect 구분 방법 (partial) 추가
+# Connect 구분 방법 (lambda) 변경
 
 import sys
-from functools import partial
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.8.1"
+__version__ = "1.8.2"
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -93,11 +92,11 @@ class Form(QDialog):
                         signal_spinCountLabel3.setText)
 
         self.connect(connect_button1, SIGNAL("clicked()"),
-                        partial(self.Connect_ButtonClick, "Button1"))
+                lambda name="Button1": self.Connect_ButtonClick(name))
         self.connect(connect_button2, SIGNAL("clicked()"),
-                        partial(self.Connect_ButtonClick, "Button2"))
+                lambda name="Button2": self.Connect_ButtonClick(name))
         self.connect(connect_button3, SIGNAL("clicked()"),
-                        partial(self.Connect_ButtonClick, "Button3"))
+                lambda name="Button3": self.Connect_ButtonClick(name))
 
         self.setWindowTitle("Main Dialog")
 
