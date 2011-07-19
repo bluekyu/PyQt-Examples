@@ -9,161 +9,199 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# Connect 구분 방법 종합
+# 대화 상자로 변경 
 
 import sys
 from functools import partial 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "1.8.4"
+__version__ = "2.1.1"
 
 class Form(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
+
+        # main dialog
+        label = QLabel("Hello, PyQt")
+
+        widgetLayout = QHBoxLayout()
+        widgetLayout.addWidget(label)
+
+        simpleButton = QPushButton("Simple Dialog")
+        signalButton = QPushButton("Signal Dialog")
+        connectButton = QPushButton("Connect Dialog")
+
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addWidget(simpleButton)
+        buttonLayout.addWidget(signalButton)
+        buttonLayout.addWidget(connectButton)
+
+        layout = QVBoxLayout()
+        layout.addLayout(buttonLayout)
+        layout.addLayout(widgetLayout)
+
+        self.connect(simpleButton, SIGNAL("clicked()"), self.SimpleCall)
+        self.connect(signalButton, SIGNAL("clicked()"), self.SignalCall)
+        self.connect(connectButton, SIGNAL("clicked()"), self.ConnectCall)
         
-        # simple part
-        simple_partName = QLabel("Simple Widget")
-        self.simple_label = QLabel("Hello, PyQt!")
-        self.simple_labelFormat = "{}"
-
-        self.simple_lineEidt = QLineEdit("This is LineEdit Widget")
-        self.simple_boldCheckBox = QCheckBox("굵게(&B)")
-        simple_initButton = QPushButton("초기화(&I)")
-        simple_initButton.setAutoDefault(False)
-        
-        simple_buttonLayout = QHBoxLayout()
-        simple_buttonLayout.addWidget(simple_initButton)
-        simple_buttonLayout.addStretch()
-
-        simple_layout = QGridLayout()
-        simple_layout.addWidget(simple_partName, 0, 0, 1, 2)
-        simple_layout.addWidget(self.simple_label, 1, 0, 1, 2)
-        simple_layout.addWidget(self.simple_lineEidt, 2, 0, 1, 2)
-        simple_layout.addWidget(self.simple_boldCheckBox, 3, 0)
-        simple_layout.addLayout(simple_buttonLayout, 4, 0)
-        simple_layout.setRowStretch(5, 1)
-
-        self.connect(self.simple_lineEidt, SIGNAL("returnPressed()"),
-                        self.Simple_UpdateLabel)
-        self.connect(self.simple_boldCheckBox, SIGNAL("stateChanged(int)"),
-                        self.Simple_LabelBold)
-        self.connect(simple_initButton, SIGNAL("clicked()"), self.Simple_Initialize)
-
-        # signal part
-        signal_partName = QLabel("Signal Test")
-        signal_spinCountLabel1 = QLabel("0")
-        signal_spinCountLabel2 = QLabel("0")
-        signal_spinCountLabel3 = QLabel("0")
-        signal_spinBox = MySignalSpinBox()
-
-        signal_layout = QVBoxLayout()
-        signal_layout.addWidget(signal_partName)
-        signal_layout.addWidget(signal_spinCountLabel1)
-        signal_layout.addWidget(signal_spinCountLabel2)
-        signal_layout.addWidget(signal_spinCountLabel3)
-        signal_layout.addWidget(signal_spinBox)
-        signal_layout.addStretch()
-
-        self.connect(signal_spinBox, SIGNAL("countup(QString)"), 
-                        signal_spinCountLabel1, SLOT("setText(QString)"))
-        self.connect(signal_spinBox, SIGNAL("countup(QString)"), 
-                        signal_spinCountLabel2.setText)
-        self.connect(signal_spinBox, SIGNAL("countup"), 
-                        signal_spinCountLabel3.setText)
-
-        # connect part
-        connect_partName = QLabel("Connect Test")
-        self.connect_label = QLabel("Button Name")
-        connect_button1 = QPushButton("Button1")
-        connect_button2 = QPushButton("Button2")
-        connect_button3 = QPushButton("Button3")
-        
-        # partial connect
-        self.connect(connect_button1, SIGNAL("clicked()"),
-                        partial(self.Connect_ButtonClick, "Button1"))
-        self.connect(connect_button2, SIGNAL("clicked()"),
-                        partial(self.Connect_ButtonClick, "Button2"))
-        self.connect(connect_button3, SIGNAL("clicked()"),
-                        partial(self.Connect_ButtonClick, "Button3"))
-
-        connect_button4 = QPushButton("Button4")
-        connect_button5 = QPushButton("Button5")
-        connect_button6 = QPushButton("Button6")
-
-        # lambda connect
-        self.connect(connect_button4, SIGNAL("clicked()"),
-                lambda name="Button4": self.Connect_ButtonClick(name))
-        self.connect(connect_button5, SIGNAL("clicked()"),
-                lambda name="Button5": self.Connect_ButtonClick(name))
-        self.connect(connect_button6, SIGNAL("clicked()"),
-                lambda name="Button6": self.Connect_ButtonClick(name))
-
-        connect_button7 = QPushButton("Button7")
-        connect_button8 = QPushButton("Button8")
-        connect_button9 = QPushButton("Button9")
-
-        # sender connect
-        self.connect(connect_button7, SIGNAL("clicked()"),
-                        self.Connect_SenderButtonClick)
-        self.connect(connect_button8, SIGNAL("clicked()"),
-                        self.Connect_SenderButtonClick)
-        self.connect(connect_button9, SIGNAL("clicked()"),
-                        self.Connect_SenderButtonClick)
-
-        connect_layout = QGridLayout()
-        connect_layout.addWidget(connect_partName, 0, 0)
-        connect_layout.addWidget(self.connect_label, 1, 0)
-        connect_layout.addWidget(connect_button1, 2, 0)
-        connect_layout.addWidget(connect_button2, 3, 0)
-        connect_layout.addWidget(connect_button3, 4, 0)
-        connect_layout.addWidget(connect_button4, 2, 1)
-        connect_layout.addWidget(connect_button5, 3, 1)
-        connect_layout.addWidget(connect_button6, 4, 1)
-        connect_layout.addWidget(connect_button7, 2, 2)
-        connect_layout.addWidget(connect_button8, 3, 2)
-        connect_layout.addWidget(connect_button9, 4, 2)
-        connect_layout.setRowStretch(5, 1)
-        connect_layout.setColumnStretch(3, 1)
-
-        # Main dialog part
-        layout = QHBoxLayout()
-        layout.addLayout(simple_layout)
-        layout.addSpacing(30)
-        layout.addLayout(signal_layout)
-        layout.addSpacing(30)
-        layout.addLayout(connect_layout)
-
         self.setLayout(layout)
-        
         self.setWindowTitle("Main Dialog")
 
-    def Simple_UpdateLabel(self):
-        self.simple_label.setText(self.simple_labelFormat.format(
-                    self.simple_lineEidt.text()))
+    def SimpleCall(self):
+        SimpleDialog(self).exec_()
 
-    def Simple_LabelBold(self):
-        if self.simple_boldCheckBox.isChecked():
-            self.simple_labelFormat = "<b>{}</b>"
-        else:
-            self.simple_labelFormat = "{}"
-        self.Simple_UpdateLabel()
+    def SignalCall(self):
+        SignalDialog(self).exec_()
 
-    def Simple_Initialize(self):
-        self.simple_labelFormat = "{}"
-        self.simple_boldCheckBox.setCheckState(Qt.Unchecked)
-        self.simple_lineEidt.setText("This is LineEdit Widget")
-        self.simple_label.setText("Hello, PyQt!")
+    def ConnectCall(self):
+        ConnectDialog(self).exec_()
 
-    def Connect_ButtonClick(self, buttonName):
-        self.connect_label.setText(buttonName)
 
-    def Connect_SenderButtonClick(self):
+class ConnectDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        # connect part
+        self.label = QLabel("Button Name")
+        button1 = QPushButton("Button1")
+        button2 = QPushButton("Button2")
+        button3 = QPushButton("Button3")
+        
+        # partial connect
+        self.connect(button1, SIGNAL("clicked()"),
+                        partial(self.ButtonClick, "Button1"))
+        self.connect(button2, SIGNAL("clicked()"),
+                        partial(self.ButtonClick, "Button2"))
+        self.connect(button3, SIGNAL("clicked()"),
+                        partial(self.ButtonClick, "Button3"))
+
+        button4 = QPushButton("Button4")
+        button5 = QPushButton("Button5")
+        button6 = QPushButton("Button6")
+
+        # lambda connect
+        self.connect(button4, SIGNAL("clicked()"),
+                lambda name="Button4": self.ButtonClick(name))
+        self.connect(button5, SIGNAL("clicked()"),
+                lambda name="Button5": self.ButtonClick(name))
+        self.connect(button6, SIGNAL("clicked()"),
+                lambda name="Button6": self.ButtonClick(name))
+
+        button7 = QPushButton("Button7")
+        button8 = QPushButton("Button8")
+        button9 = QPushButton("Button9")
+
+        # sender connect
+        self.connect(button7, SIGNAL("clicked()"),
+                        self.SenderButtonClick)
+        self.connect(button8, SIGNAL("clicked()"),
+                        self.SenderButtonClick)
+        self.connect(button9, SIGNAL("clicked()"),
+                        self.SenderButtonClick)
+
+        layout = QGridLayout()
+        layout.addWidget(self.label, 0, 0)
+        layout.addWidget(button1, 1, 0)
+        layout.addWidget(button2, 2, 0)
+        layout.addWidget(button3, 3, 0)
+        layout.addWidget(button4, 1, 1)
+        layout.addWidget(button5, 2, 1)
+        layout.addWidget(button6, 3, 1)
+        layout.addWidget(button7, 1, 2)
+        layout.addWidget(button8, 2, 2)
+        layout.addWidget(button9, 3, 2)
+        layout.setRowStretch(4, 1)
+        layout.setColumnStretch(3, 1)
+
+        self.setLayout(layout)
+        self.setWindowTitle("Connect Title")
+
+    def ButtonClick(self, buttonName):
+        self.label.setText(buttonName)
+
+    def SenderButtonClick(self):
         button = self.sender()
         if not (button and isinstance(button, QPushButton)):
             return
-        self.connect_label.setText(button.text())
+        self.label.setText(button.text())
+
+
+class SignalDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        # signal part
+        spinCountLabel1 = QLabel("0")
+        spinCountLabel2 = QLabel("0")
+        spinCountLabel3 = QLabel("0")
+        spinBox = MySignalSpinBox()
+
+        layout = QVBoxLayout()
+        layout.addWidget(spinCountLabel1)
+        layout.addWidget(spinCountLabel2)
+        layout.addWidget(spinCountLabel3)
+        layout.addWidget(spinBox)
+        layout.addStretch()
+
+        self.connect(spinBox, SIGNAL("countup(QString)"), 
+                        spinCountLabel1, SLOT("setText(QString)"))
+        self.connect(spinBox, SIGNAL("countup(QString)"), 
+                        spinCountLabel2.setText)
+        self.connect(spinBox, SIGNAL("countup"), spinCountLabel3.setText)
+
+        self.setLayout(layout)
+        self.setWindowTitle("Signal Test")
+
+class SimpleDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        # simple part
+        self.label = QLabel("Hello, PyQt!")
+        self.labelFormat = "{}"
+
+        self.lineEidt = QLineEdit("This is LineEdit Widget")
+        self.boldCheckBox = QCheckBox("굵게(&B)")
+        initButton = QPushButton("초기화(&I)")
+        initButton.setAutoDefault(False)
+        
+        buttonLayout = QHBoxLayout()
+        buttonLayout.addWidget(initButton)
+        buttonLayout.addStretch()
+
+        layout = QGridLayout()
+        layout.addWidget(self.label, 0, 0, 1, 2)
+        layout.addWidget(self.lineEidt, 1, 0, 1, 2)
+        layout.addWidget(self.boldCheckBox, 2, 0)
+        layout.addLayout(buttonLayout, 3, 0)
+        layout.setRowStretch(4, 1)
+
+        self.setLayout(layout)
+        self.setWindowTitle("Simple Widget")
+
+        self.connect(self.lineEidt, SIGNAL("returnPressed()"),
+                        self.UpdateLabel)
+        self.connect(self.boldCheckBox, SIGNAL("stateChanged(int)"),
+                        self.LabelBold)
+        self.connect(initButton, SIGNAL("clicked()"), self.Initialize)
     
+    def UpdateLabel(self):
+        self.label.setText(self.labelFormat.format(self.lineEidt.text()))
+
+    def LabelBold(self):
+        if self.boldCheckBox.isChecked():
+            self.labelFormat = "<b>{}</b>"
+        else:
+            self.labelFormat = "{}"
+        self.UpdateLabel()
+
+    def Initialize(self):
+        self.labelFormat = "{}"
+        self.boldCheckBox.setCheckState(Qt.Unchecked)
+        self.lineEidt.setText("This is LineEdit Widget")
+        self.label.setText("Hello, PyQt!")
+
 class MySignalSpinBox(QSpinBox):
     changedCount = 0
 
