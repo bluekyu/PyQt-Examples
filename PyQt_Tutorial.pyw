@@ -9,14 +9,14 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# Dumb 대화 상자 구현
+# Standard 대화 상자 구현
 
 import sys
 from functools import partial 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "2.2.1"
+__version__ = "2.2.2"
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -126,10 +126,89 @@ class Form(QDialog):
             self.spinBox.setValue(dialog.slider.value())
 
     def StandardCall(self):
-        pass
+        values = {"label" : self.textLabel.text(), 
+                    "comboBox" : self.comboBoxLabel.text(),
+                    "dial" : self.dial.value()}
+        dialog = StandardDialog(values, self)
+        if dialog.exec_():
+            values = dialog.getResult()
+            self.textLabel.setText(values["label"])
+            self.comboBoxLabel.setText(values["comboBox"])
+            self.dial.setValue(values["dial"])
 
     def SmartCall(self):
         pass
+
+class StandardDialog(QDialog):
+    def __init__(self, arg, parent=None):
+        super().__init__(parent)
+
+        textEditLabel = QLabel("Main 레이블 변경: ")
+        self.textLineEdit = QLineEdit(arg["label"])
+        
+        valueEditLabel = QLabel("Main 다이얼 변경: ")
+        self.valueLineEdit = QLineEdit(str(arg["dial"]))
+
+        comboBoxLabel = QLabel("Combo Box(&C): ")
+        self.comboBox = QComboBox()
+        comboBoxLabel.setBuddy(self.comboBox)
+        for item in ["item1", "item2", "item3", "item4", "item5"]:
+            self.comboBox.addItem(item)
+        comboBoxIndex = self.comboBox.findText(arg["comboBox"])
+        if comboBoxIndex == -1:
+            comboBoxIndex = 0
+        self.comboBox.setCurrentIndex(comboBoxIndex)
+
+        self.result = arg.copy()
+
+        widgetLayout = QFormLayout()
+        widgetLayout.addRow(textEditLabel, self.textLineEdit)
+        widgetLayout.addRow(valueEditLabel, self.valueLineEdit)
+        widgetLayout.addRow(comboBoxLabel, self.comboBox)
+
+        okButton = QPushButton("확인(&O)")
+        cancelButton = QPushButton("취소")
+        buttonBox = QDialogButtonBox()
+        buttonBox.addButton(okButton, QDialogButtonBox.AcceptRole)
+        buttonBox.addButton(cancelButton, QDialogButtonBox.RejectRole)
+        okButton.setDefault(True)
+        self.connect(buttonBox, SIGNAL("accepted()"), self, SLOT("accept()"))
+        self.connect(buttonBox, SIGNAL("rejected()"), self, SLOT("reject()"))
+
+        layout = QVBoxLayout()
+        layout.addLayout(widgetLayout)
+        layout.addWidget(buttonBox)
+
+        self.setLayout(layout)
+        self.setWindowTitle("Dumb Dialog")
+
+    def accept(self):
+        class OutOfRangeNumberError(Exception): pass
+
+        try:
+            value = int(self.valueLineEdit.text())
+            if value < 0 or value > 100:
+                raise OutOfRangeNumberError("This value is out of range "
+                                            "from 0 to 100.")
+        except ValueError:
+            QMessageBox.warning(self, "Invalid number format",
+                                    "This is not a number")
+            self.valueLineEdit.selectAll()
+            self.valueLineEdit.setFocus()
+            return
+        except OutOfRangeNumberError as e:
+            QMessageBox.warning(self, "Out of Range of number", str(e))
+            self.valueLineEdit.selectAll()
+            self.valueLineEdit.setFocus()
+            return
+
+        self.result["label"] = self.textLineEdit.text()
+        self.result["comboBox"] = self.comboBox.currentText()
+        self.result["dial"] = value
+        QDialog.accept(self)
+
+    def getResult(self):
+        return self.result
 
 class DumbDialog(QDialog):
     def __init__(self, parent=None):
