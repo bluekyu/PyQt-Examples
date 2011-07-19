@@ -9,54 +9,165 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# 대화 상자로 변경 
+# Dumb 대화 상자 구현
 
 import sys
 from functools import partial 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "2.1.1"
+__version__ = "2.2.1"
 
 class Form(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        # main dialog
-        label = QLabel("Hello, PyQt")
-
-        widgetLayout = QHBoxLayout()
-        widgetLayout.addWidget(label)
-
+        # Buttons
         simpleButton = QPushButton("Simple Dialog")
         signalButton = QPushButton("Signal Dialog")
         connectButton = QPushButton("Connect Dialog")
-
-        buttonLayout = QHBoxLayout()
-        buttonLayout.addWidget(simpleButton)
-        buttonLayout.addWidget(signalButton)
-        buttonLayout.addWidget(connectButton)
-
-        layout = QVBoxLayout()
-        layout.addLayout(buttonLayout)
-        layout.addLayout(widgetLayout)
-
+        dumbButton = QPushButton("Dumb Dialog")
+        standardButton = QPushButton("Standard Dialog")
+        smartButton = QPushButton("Smart Dialog")
+        buttonLayout = QGridLayout()
+        buttonLayout.addWidget(simpleButton, 0, 0)
+        buttonLayout.addWidget(signalButton, 0, 1)
+        buttonLayout.addWidget(connectButton, 0, 2)
+        buttonLayout.addWidget(dumbButton, 1, 0)
+        buttonLayout.addWidget(standardButton, 1, 1)
+        buttonLayout.addWidget(smartButton, 1, 2)
+        buttonLayout.setColumnStretch(3, 1)
         self.connect(simpleButton, SIGNAL("clicked()"), self.SimpleCall)
         self.connect(signalButton, SIGNAL("clicked()"), self.SignalCall)
         self.connect(connectButton, SIGNAL("clicked()"), self.ConnectCall)
+        self.connect(dumbButton, SIGNAL("clicked()"), self.DumbCall)
+        self.connect(standardButton, SIGNAL("clicked()"), self.StandardCall)
+        self.connect(smartButton, SIGNAL("clicked()"), self.SmartCall)
+        
+        # Label
+        textNameLabel = QLabel("Text Name: ")
+        self.textLabel = QLabel("Hello, PyQt")
+        
+        # ComboBox Label
+        comboBoxNameLabel = QLabel("ComboBox Name: ")
+        self.comboBoxLabel = QLabel("What Item")
+        labelLayout = QFormLayout()
+        labelLayout.addRow(textNameLabel, self.textLabel)
+        labelLayout.addRow(comboBoxNameLabel, self.comboBoxLabel)
+        
+        # SpinBox
+        spinBoxLabel = QLabel("Spin Box(&S): ")
+        self.spinBox = QSpinBox()
+        spinBoxLabel.setBuddy(self.spinBox)
+        self.spinBox.setRange(0, 100)
+        self.spinBox.setValue(0)
+        spinBoxLayout = QHBoxLayout()
+        spinBoxLayout.addWidget(spinBoxLabel)
+        spinBoxLayout.addWidget(self.spinBox)
+
+        # Dial
+        dialLabel = QLabel("Dial(&D): ")
+        self.dial = QDial()
+        dialLabel.setBuddy(self.dial)
+        self.dial.setRange(0, 100)
+        self.dial.setValue(0)
+        self.dial.setNotchesVisible(True)
+        dialLayout = QHBoxLayout()
+        dialLayout.addWidget(dialLabel)
+        dialLayout.addWidget(self.dial)
+
+        # Slider
+        sliderLabel = QLabel("Slider(&L): ")
+        self.slider = QSlider(Qt.Horizontal)
+        sliderLabel.setBuddy(self.slider)
+        self.slider.setRange(0, 100)
+        self.slider.setValue(0)
+        sliderLayout = QHBoxLayout()
+        sliderLayout.addWidget(sliderLabel)
+        sliderLayout.addWidget(self.slider)
+
+        # Widget layout
+        widgetLayout = QVBoxLayout()
+        widgetLayout.addLayout(labelLayout)
+        widgetLayout.addLayout(spinBoxLayout)
+        widgetLayout.addLayout(dialLayout)
+        widgetLayout.addLayout(sliderLayout)
+        widgetLayout.addStretch()
+
+        # Main Layout
+        layout = QVBoxLayout()
+        layout.addLayout(buttonLayout)
+        layout.addLayout(widgetLayout)
         
         self.setLayout(layout)
         self.setWindowTitle("Main Dialog")
 
     def SimpleCall(self):
         SimpleDialog(self).exec_()
-
+       
     def SignalCall(self):
         SignalDialog(self).exec_()
 
     def ConnectCall(self):
         ConnectDialog(self).exec_()
 
+    def DumbCall(self):
+        dialog = DumbDialog(self)
+        comboBoxIndex = dialog.comboBox.findText(self.comboBoxLabel.text())
+        if comboBoxIndex == -1:
+            comboBoxIndex = 0
+        dialog.comboBox.setCurrentIndex(comboBoxIndex)
+        dialog.textLineEdit.setText(self.textLabel.text())
+        dialog.slider.setValue(self.spinBox.value())
+        
+        if dialog.exec_():
+            self.comboBoxLabel.setText(dialog.comboBox.currentText())
+            self.textLabel.setText(dialog.textLineEdit.text())
+            self.spinBox.setValue(dialog.slider.value())
+
+    def StandardCall(self):
+        pass
+
+    def SmartCall(self):
+        pass
+
+class DumbDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+        textEditLabel = QLabel("Main 레이블 변경: ")
+        self.textLineEdit = QLineEdit("Hello, PyQt!")
+        
+        valueEditLabel = QLabel("Main 값 변경: ")
+        self.slider = QSlider(Qt.Horizontal)
+        self.slider.setRange(0, 100)
+
+        comboBoxLabel = QLabel("Combo Box(&C): ")
+        self.comboBox = QComboBox()
+        comboBoxLabel.setBuddy(self.comboBox)
+        for item in ["item1", "item2", "item3", "item4", "item5"]:
+            self.comboBox.addItem(item)
+
+        widgetLayout = QFormLayout()
+        widgetLayout.addRow(textEditLabel, self.textLineEdit)
+        widgetLayout.addRow(comboBoxLabel, self.comboBox)
+        widgetLayout.addRow(valueEditLabel, self.slider)
+
+        okButton = QPushButton("확인(&O)")
+        cancelButton = QPushButton("취소")
+        buttonBox = QDialogButtonBox()
+        buttonBox.addButton(okButton, QDialogButtonBox.AcceptRole)
+        buttonBox.addButton(cancelButton, QDialogButtonBox.RejectRole)
+        okButton.setDefault(True)
+        self.connect(buttonBox, SIGNAL("accepted()"), self, SLOT("accept()"))
+        self.connect(buttonBox, SIGNAL("rejected()"), self, SLOT("reject()"))
+
+        layout = QVBoxLayout()
+        layout.addLayout(widgetLayout)
+        layout.addWidget(buttonBox) 
+
+        self.setLayout(layout)
+        self.setWindowTitle("Dumb Dialog") 
 
 class ConnectDialog(QDialog):
     def __init__(self, parent=None):
@@ -125,7 +236,6 @@ class ConnectDialog(QDialog):
         if not (button and isinstance(button, QPushButton)):
             return
         self.label.setText(button.text())
-
 
 class SignalDialog(QDialog):
     def __init__(self, parent=None):
