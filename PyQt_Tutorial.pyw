@@ -9,18 +9,20 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# Smart 대화 상자 구현
+# Live 대화 상자 구현
 
 import sys
 from functools import partial 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "2.2.3"
+__version__ = "2.2.4"
 
 class Form(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
+
+        self.liveDialog = None
 
         # Buttons
         simpleButton = QPushButton("Simple Dialog")
@@ -29,6 +31,7 @@ class Form(QDialog):
         dumbButton = QPushButton("Dumb Dialog")
         standardButton = QPushButton("Standard Dialog")
         smartButton = QPushButton("Smart Dialog")
+        liveButton = QPushButton("Live Dialog")
         buttonLayout = QGridLayout()
         buttonLayout.addWidget(simpleButton, 0, 0)
         buttonLayout.addWidget(signalButton, 0, 1)
@@ -36,6 +39,7 @@ class Form(QDialog):
         buttonLayout.addWidget(dumbButton, 1, 0)
         buttonLayout.addWidget(standardButton, 1, 1)
         buttonLayout.addWidget(smartButton, 1, 2)
+        buttonLayout.addWidget(liveButton, 1, 3)
         buttonLayout.setColumnStretch(3, 1)
         self.connect(simpleButton, SIGNAL("clicked()"), self.SimpleCall)
         self.connect(signalButton, SIGNAL("clicked()"), self.SignalCall)
@@ -43,6 +47,7 @@ class Form(QDialog):
         self.connect(dumbButton, SIGNAL("clicked()"), self.DumbCall)
         self.connect(standardButton, SIGNAL("clicked()"), self.StandardCall)
         self.connect(smartButton, SIGNAL("clicked()"), self.SmartCall)
+        self.connect(liveButton, SIGNAL("clicked()"), self.LiveCall)
         
         # Label
         textNameLabel = QLabel("Text Name: ")
@@ -148,6 +153,88 @@ class Form(QDialog):
         dialog = SmartDialog(self.values, self)
         self.connect(dialog, SIGNAL("changed"), update)
         dialog.show()
+
+    def LiveCall(self):
+        def update():
+            self.textLabel.setText(self.values["label"])
+            self.comboBoxLabel.setText(self.values["comboBox"])
+            self.slider.setValue(self.values["slider"])
+
+        self.values = {"label" : self.textLabel.text(), 
+                        "comboBox" : self.comboBoxLabel.text(),
+                        "slider" : self.slider.value()}
+        if self.liveDialog is None:
+            self.liveDialog = LiveDialog(self.values, update, self)
+        self.liveDialog.refresh(self.values)
+        self.liveDialog.show()
+        self.liveDialog.raise_()
+        self.liveDialog.activateWindow()
+
+class LiveDialog(QDialog):
+    def __init__(self, arg, update, parent=None):
+        super().__init__(parent)
+
+        textEditLabel = QLabel("Main 레이블 변경: ")
+        self.textLineEdit = QLineEdit(arg["label"])
+        
+        valueEditLabel = QLabel("Main 슬라이더 변경: ")
+        self.valueLineEdit = QLineEdit(str(arg["slider"]))
+        self.valueLineEdit.setInputMask("900")
+
+        comboBoxLabel = QLabel("Combo Box(&C): ")
+        self.comboBox = QComboBox()
+        comboBoxLabel.setBuddy(self.comboBox)
+        for item in ["item1", "item2", "item3", "item4", "item5"]:
+            self.comboBox.addItem(item)
+        comboBoxIndex = self.comboBox.findText(arg["comboBox"])
+        if comboBoxIndex == -1:
+            comboBoxIndex = 0
+        self.comboBox.setCurrentIndex(comboBoxIndex)
+
+        self.result = arg
+        self.update = update
+
+        widgetLayout = QFormLayout()
+        widgetLayout.addRow(textEditLabel, self.textLineEdit)
+        widgetLayout.addRow(valueEditLabel, self.valueLineEdit)
+        widgetLayout.addRow(comboBoxLabel, self.comboBox)
+
+        self.connect(self.textLineEdit, SIGNAL("textEdited(QString)"),
+                        self.apply)
+        self.connect(self.valueLineEdit, SIGNAL("textEdited(QString)"),
+                        self.checkFix)
+        self.connect(self.comboBox, SIGNAL("currentIndexChanged(int)"),
+                        self.apply)
+
+        layout = QVBoxLayout()
+        layout.addLayout(widgetLayout)
+
+        self.setLayout(layout)
+        self.setWindowTitle("Live Dialog")
+
+    def checkFix(self):
+        valueText = self.valueLineEdit.text()
+        if len(valueText) == 0 or int(valueText) < 0 or int(valueText) > 100:
+            self.valueLineEdit.setText("0")
+            self.valueLineEdit.selectAll()
+            self.valueLineEdit.setFocus()
+        self.apply()
+
+    def apply(self):
+        value = int(self.valueLineEdit.text())
+        self.result["label"] = self.textLineEdit.text()
+        self.result["comboBox"] = self.comboBox.currentText()
+        self.result["slider"] = value
+        self.update()
+    
+    def refresh(self, arg):
+        self.textLineEdit.setText(arg["label"])
+        self.valueLineEdit.setText(str(arg["slider"]))
+        comboBoxIndex = self.comboBox.findText(arg["comboBox"])
+        if comboBoxIndex == -1:
+            comboBoxIndex = 0
+        self.comboBox.setCurrentIndex(comboBoxIndex)
+        self.result = arg
 
 class SmartDialog(QDialog):
     def __init__(self, arg, parent=None):
