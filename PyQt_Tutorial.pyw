@@ -9,14 +9,14 @@
 # 보증을 포함한 어떠한 형태의 보증도 제공하지 않습니다. 보다 자세한 사항에
 # 대해서는 GNU 일반 공중 사용 허가서를 참고하시기 바랍니다.
 
-# Standard 대화 상자 구현
+# Smart 대화 상자 구현
 
 import sys
 from functools import partial 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "2.2.2"
+__version__ = "2.2.3"
 
 class Form(QDialog):
     def __init__(self, parent=None):
@@ -137,7 +137,87 @@ class Form(QDialog):
             self.dial.setValue(values["dial"])
 
     def SmartCall(self):
-        pass
+        def update():
+            self.textLabel.setText(self.values["label"])
+            self.comboBoxLabel.setText(self.values["comboBox"])
+            self.slider.setValue(self.values["slider"])
+
+        self.values = {"label" : self.textLabel.text(), 
+                        "comboBox" : self.comboBoxLabel.text(),
+                        "slider" : self.slider.value()}
+        dialog = SmartDialog(self.values, self)
+        self.connect(dialog, SIGNAL("changed"), update)
+        dialog.show()
+
+class SmartDialog(QDialog):
+    def __init__(self, arg, parent=None):
+        super().__init__(parent)
+        self.setAttribute(Qt.WA_DeleteOnClose)
+
+        textEditLabel = QLabel("Main 레이블 변경: ")
+        self.textLineEdit = QLineEdit(arg["label"])
+        
+        valueEditLabel = QLabel("Main 슬라이더 변경: ")
+        self.valueLineEdit = QLineEdit(str(arg["slider"]))
+        self.valueLineEdit.setInputMask("900")
+
+        comboBoxLabel = QLabel("Combo Box(&C): ")
+        self.comboBox = QComboBox()
+        comboBoxLabel.setBuddy(self.comboBox)
+        for item in ["item1", "item2", "item3", "item4", "item5"]:
+            self.comboBox.addItem(item)
+        comboBoxIndex = self.comboBox.findText(arg["comboBox"])
+        if comboBoxIndex == -1:
+            comboBoxIndex = 0
+        self.comboBox.setCurrentIndex(comboBoxIndex)
+
+        self.result = arg
+
+        widgetLayout = QFormLayout()
+        widgetLayout.addRow(textEditLabel, self.textLineEdit)
+        widgetLayout.addRow(valueEditLabel, self.valueLineEdit)
+        widgetLayout.addRow(comboBoxLabel, self.comboBox)
+
+        applyButton = QPushButton("적용(&A)")
+        cancelButton = QPushButton("취소")
+        buttonBox = QDialogButtonBox()
+        buttonBox.addButton(applyButton, QDialogButtonBox.ApplyRole)
+        buttonBox.addButton(cancelButton, QDialogButtonBox.RejectRole)
+        applyButton.setDefault(True)
+        self.connect(applyButton, SIGNAL("clicked()"), self.apply)
+        self.connect(buttonBox, SIGNAL("rejected()"), self, SLOT("reject()"))
+
+        layout = QVBoxLayout()
+        layout.addLayout(widgetLayout)
+        layout.addWidget(buttonBox)
+
+        self.setLayout(layout)
+        self.setWindowTitle("Smart Dialog")
+
+    def apply(self):
+        class OutOfRangeNumberError(Exception): pass
+
+        try:
+            value = int(self.valueLineEdit.text())
+            if value < 0 or value > 100:
+                raise OutOfRangeNumberError("This value is out of range "
+                                            "from 0 to 100.")
+        except ValueError:
+            QMessageBox.warning(self, "Value is Empty",
+                                    "This may not be empty")
+            self.valueLineEdit.selectAll()
+            self.valueLineEdit.setFocus()
+            return
+        except OutOfRangeNumberError as e:
+            QMessageBox.warning(self, "Out of Range of number", str(e))
+            self.valueLineEdit.selectAll()
+            self.valueLineEdit.setFocus()
+            return
+
+        self.result["label"] = self.textLineEdit.text()
+        self.result["comboBox"] = self.comboBox.currentText()
+        self.result["slider"] = value
+        self.emit(SIGNAL("changed"))
 
 class StandardDialog(QDialog):
     def __init__(self, arg, parent=None):
@@ -180,7 +260,7 @@ class StandardDialog(QDialog):
         layout.addWidget(buttonBox)
 
         self.setLayout(layout)
-        self.setWindowTitle("Dumb Dialog")
+        self.setWindowTitle("Standard Dialog")
 
     def accept(self):
         class OutOfRangeNumberError(Exception): pass
@@ -192,7 +272,7 @@ class StandardDialog(QDialog):
                                             "from 0 to 100.")
         except ValueError:
             QMessageBox.warning(self, "Invalid number format",
-                                    "This is not a number")
+                                    "This is not a integer")
             self.valueLineEdit.selectAll()
             self.valueLineEdit.setFocus()
             return
