@@ -15,42 +15,42 @@ import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
-__version__ = "2.2.5"
+__version__ = "3.1.1"
 
 class LiveDialog(QDialog):
-    def __init__(self, arg, update, parent=None):
+    def __init__(self, values, update, parent=None):
         super().__init__(parent)
 
-        textEditLabel = QLabel("Main 레이블 변경: ")
-        self.textLineEdit = QLineEdit(arg["label"])
-        
-        valueEditLabel = QLabel("Main 슬라이더 변경: ")
-        self.valueLineEdit = QLineEdit(str(arg["slider"]))
-        self.valueLineEdit.setInputMask("900")
+        liveLineEditLabel = QLabel("Main 레이블 변경(&L): ")
+        self.liveLineEdit = QLineEdit(values["labelText"])
+        liveLineEditLabel.setBuddy(self.liveLineEdit)
 
-        comboBoxLabel = QLabel("Combo Box(&C): ")
-        self.comboBox = QComboBox()
-        comboBoxLabel.setBuddy(self.comboBox)
-        for item in ["item1", "item2", "item3", "item4", "item5"]:
-            self.comboBox.addItem(item)
-        comboBoxIndex = self.comboBox.findText(arg["comboBox"])
-        if comboBoxIndex == -1:
-            comboBoxIndex = 0
-        self.comboBox.setCurrentIndex(comboBoxIndex)
+        liveComboBoxLabel = QLabel("Main 콤보 상자 변경(&C): ")
+        self.liveComboBox = QComboBox()
+        liveComboBoxLabel.setBuddy(self.liveComboBox)
+        self.liveComboBox.addItems(values["comboBoxItems"])
+        self.liveComboBox.setCurrentIndex(values["comboBoxIndex"])
 
-        self.result = arg
+        liveSliderEditLabel = QLabel("Main 슬라이더 변경(&S): ")
+        self.liveSliderEdit = QLineEdit(str(values["sliderValue"]))
+        liveSliderEditLabel.setBuddy(self.liveSliderEdit)
+        maxLen = max(len(str(abs(values["sliderMaximum"]))), 
+                    len(str(abs(values["sliderMinimum"]))))
+        self.liveSliderEdit.setInputMask("#" + "0" * maxLen)
+
+        self.values = values
         self.update = update
 
         widgetLayout = QFormLayout()
-        widgetLayout.addRow(textEditLabel, self.textLineEdit)
-        widgetLayout.addRow(valueEditLabel, self.valueLineEdit)
-        widgetLayout.addRow(comboBoxLabel, self.comboBox)
+        widgetLayout.addRow(liveLineEditLabel, self.liveLineEdit)
+        widgetLayout.addRow(liveSliderEditLabel, self.liveSliderEdit)
+        widgetLayout.addRow(liveComboBoxLabel, self.liveComboBox)
 
-        self.connect(self.textLineEdit, SIGNAL("textEdited(QString)"),
+        self.connect(self.liveLineEdit, SIGNAL("textEdited(QString)"),
                         self.apply)
-        self.connect(self.valueLineEdit, SIGNAL("textEdited(QString)"),
+        self.connect(self.liveSliderEdit, SIGNAL("textEdited(QString)"),
                         self.checkFix)
-        self.connect(self.comboBox, SIGNAL("currentIndexChanged(int)"),
+        self.connect(self.liveComboBox, SIGNAL("currentIndexChanged(int)"),
                         self.apply)
 
         layout = QVBoxLayout()
@@ -61,57 +61,56 @@ class LiveDialog(QDialog):
         self.setWindowTitle("Live Dialog")
 
     def checkFix(self):
-        valueText = self.valueLineEdit.text()
-        if len(valueText) == 0 or int(valueText) < 0 or int(valueText) > 100:
-            self.valueLineEdit.setText("0")
-            self.valueLineEdit.selectAll()
-            self.valueLineEdit.setFocus()
+        sliderEditValueText = self.liveSliderEdit.text()
+        if sliderEditValueText == "-":
+            self.liveSliderEdit.setText("-0")
+            self.liveSliderEdit.setCursorPosition(1)
+            self.liveSliderEdit.setFocus()
+        elif len(sliderEditValueText) == 0: 
+            self.liveSliderEdit.setText("0")
+            self.liveSliderEdit.setCursorPosition(0)
+            self.liveSliderEdit.setFocus()
+        elif int(sliderEditValueText) < self.values["sliderMinimum"] or \
+            int(sliderEditValueText) > self.values["sliderMaximum"]:
+            self.liveSliderEdit.backspace()
+               
         self.apply()
 
     def apply(self):
-        value = int(self.valueLineEdit.text())
-        self.result["label"] = self.textLineEdit.text()
-        self.result["comboBox"] = self.comboBox.currentText()
-        self.result["slider"] = value
+        sliderEditValue = int(self.liveSliderEdit.text())
+        self.values["labelText"] = self.liveLineEdit.text()
+        self.values["comboBoxIndex"] = self.liveComboBox.currentIndex()
+        self.values["sliderValue"] = sliderEditValue
         self.update()
-    
-    def refresh(self, arg):
-        self.textLineEdit.setText(arg["label"])
-        self.valueLineEdit.setText(str(arg["slider"]))
-        comboBoxIndex = self.comboBox.findText(arg["comboBox"])
-        if comboBoxIndex == -1:
-            comboBoxIndex = 0
-        self.comboBox.setCurrentIndex(comboBoxIndex)
-        self.result = arg
 
 class SmartDialog(QDialog):
-    def __init__(self, arg, parent=None):
+    def __init__(self, values, parent=None):
         super().__init__(parent)
         self.setAttribute(Qt.WA_DeleteOnClose)
 
-        textEditLabel = QLabel("Main 레이블 변경: ")
-        self.textLineEdit = QLineEdit(arg["label"])
-        
-        valueEditLabel = QLabel("Main 슬라이더 변경: ")
-        self.valueLineEdit = QLineEdit(str(arg["slider"]))
-        self.valueLineEdit.setInputMask("900")
+        smartLineEditLabel = QLabel("Main 레이블 변경(&L): ")
+        self.smartLineEdit = QLineEdit(values["labelText"])
+        smartLineEditLabel.setBuddy(self.smartLineEdit)
 
-        comboBoxLabel = QLabel("Combo Box(&C): ")
-        self.comboBox = QComboBox()
-        comboBoxLabel.setBuddy(self.comboBox)
-        for item in ["item1", "item2", "item3", "item4", "item5"]:
-            self.comboBox.addItem(item)
-        comboBoxIndex = self.comboBox.findText(arg["comboBox"])
-        if comboBoxIndex == -1:
-            comboBoxIndex = 0
-        self.comboBox.setCurrentIndex(comboBoxIndex)
+        smartComboBoxLabel = QLabel("Main 콤보 상자 변경(&C): ")
+        self.smartComboBox = QComboBox()
+        smartComboBoxLabel.setBuddy(self.smartComboBox)
+        self.smartComboBox.addItems(values["comboBoxItems"])
+        self.smartComboBox.setCurrentIndex(values["comboBoxIndex"])
 
-        self.result = arg
+        smartSliderEditLabel = QLabel("Main 슬라이더 변경(&S): ")
+        self.smartSliderEdit = QLineEdit(str(values["sliderValue"]))
+        smartSliderEditLabel.setBuddy(self.smartSliderEdit)
+        maxLen = max(len(str(abs(values["sliderMaximum"]))), 
+                    len(str(abs(values["sliderMinimum"]))))
+        self.smartSliderEdit.setInputMask("#" + "0" * maxLen)
+
+        self.values = values
 
         widgetLayout = QFormLayout()
-        widgetLayout.addRow(textEditLabel, self.textLineEdit)
-        widgetLayout.addRow(valueEditLabel, self.valueLineEdit)
-        widgetLayout.addRow(comboBoxLabel, self.comboBox)
+        widgetLayout.addRow(smartLineEditLabel, self.smartLineEdit)
+        widgetLayout.addRow(smartSliderEditLabel, self.smartSliderEdit)
+        widgetLayout.addRow(smartComboBoxLabel, self.smartComboBox)
 
         applyButton = QPushButton("적용(&A)")
         cancelButton = QPushButton("취소")
@@ -134,53 +133,54 @@ class SmartDialog(QDialog):
         class OutOfRangeNumberError(Exception): pass
 
         try:
-            value = int(self.valueLineEdit.text())
-            if value < 0 or value > 100:
+            sliderEditValue = int(self.smartSliderEdit.text())
+            sliderMaximum = self.values["sliderMaximum"]
+            sliderMinimum = self.values["sliderMinimum"]
+            if sliderEditValue < sliderMinimum or \
+                sliderEditValue > sliderMaximum:
                 raise OutOfRangeNumberError("This value is out of range "
-                                            "from 0 to 100.")
+                        "from {} to {}.".format(sliderMinimum, sliderMaximum))
         except ValueError:
-            QMessageBox.warning(self, "Value is Empty",
-                                    "This may not be empty")
-            self.valueLineEdit.selectAll()
-            self.valueLineEdit.setFocus()
+            QMessageBox.warning(self, "Number is Empty",
+                                    "This number may not be empty")
+            self.smartSliderEdit.selectAll()
+            self.smartSliderEdit.setFocus()
             return
         except OutOfRangeNumberError as e:
             QMessageBox.warning(self, "Out of Range of number", str(e))
-            self.valueLineEdit.selectAll()
-            self.valueLineEdit.setFocus()
+            self.smartSliderEdit.selectAll()
+            self.smartSliderEdit.setFocus()
             return
 
-        self.result["label"] = self.textLineEdit.text()
-        self.result["comboBox"] = self.comboBox.currentText()
-        self.result["slider"] = value
+        self.values["labelText"] = self.smartLineEdit.text()
+        self.values["comboBoxIndex"] = self.smartComboBox.currentIndex()
+        self.values["sliderValue"] = sliderEditValue
         self.emit(SIGNAL("changed"))
 
 class StandardDialog(QDialog):
-    def __init__(self, arg, parent=None):
+    def __init__(self, values, parent=None):
         super().__init__(parent)
 
-        textEditLabel = QLabel("Main 레이블 변경: ")
-        self.textLineEdit = QLineEdit(arg["label"])
+        standardLineEditLabel = QLabel("Main 레이블 변경(&L): ")
+        self.standardLineEdit = QLineEdit(values["labelText"])
+        standardLineEditLabel.setBuddy(self.standardLineEdit)
         
-        valueEditLabel = QLabel("Main 다이얼 변경: ")
-        self.valueLineEdit = QLineEdit(str(arg["dial"]))
+        standardComboBoxLabel = QLabel("Main 콤보 상자 변경(&C): ")
+        self.standardComboBox = QComboBox()
+        standardComboBoxLabel.setBuddy(self.standardComboBox)
+        self.standardComboBox.addItems(values["comboBoxItems"])
+        self.standardComboBox.setCurrentIndex(values["comboBoxIndex"])
 
-        comboBoxLabel = QLabel("Combo Box(&C): ")
-        self.comboBox = QComboBox()
-        comboBoxLabel.setBuddy(self.comboBox)
-        for item in ["item1", "item2", "item3", "item4", "item5"]:
-            self.comboBox.addItem(item)
-        comboBoxIndex = self.comboBox.findText(arg["comboBox"])
-        if comboBoxIndex == -1:
-            comboBoxIndex = 0
-        self.comboBox.setCurrentIndex(comboBoxIndex)
+        standardDialEditLabel = QLabel("Main 다이얼 변경(&D): ")
+        self.standardDialEdit = QLineEdit(str(values["dialValue"]))
+        standardDialEditLabel.setBuddy(self.standardDialEdit)
 
-        self.result = arg.copy()
+        self.values = values.copy()
 
         widgetLayout = QFormLayout()
-        widgetLayout.addRow(textEditLabel, self.textLineEdit)
-        widgetLayout.addRow(valueEditLabel, self.valueLineEdit)
-        widgetLayout.addRow(comboBoxLabel, self.comboBox)
+        widgetLayout.addRow(standardLineEditLabel, self.standardLineEdit)
+        widgetLayout.addRow(standardDialEditLabel, self.standardDialEdit)
+        widgetLayout.addRow(standardComboBoxLabel, self.standardComboBox)
 
         okButton = QPushButton("확인(&O)")
         cancelButton = QPushButton("취소")
@@ -200,54 +200,55 @@ class StandardDialog(QDialog):
         self.setWindowTitle("Standard Dialog")
 
     def accept(self):
-        class OutOfRangeNumberError(Exception): pass
+        class OutOfRangeError(Exception): pass
 
         try:
-            value = int(self.valueLineEdit.text())
-            if value < 0 or value > 100:
-                raise OutOfRangeNumberError("This value is out of range "
-                                            "from 0 to 100.")
+            dialEditValue = int(self.standardDialEdit.text())
+            dialMaximum = self.values["dialMaximum"]
+            dialMinimum = self.values["dialMinimum"]
+            if dialEditValue < dialMinimum or dialEditValue > dialMaximum:
+                raise OutOfRangeError("This value is out of a range "
+                            "from {} to {}.".format(dialMinimum, dialMaximum))
         except ValueError:
-            QMessageBox.warning(self, "Invalid number format",
+            QMessageBox.warning(self, "Invalid Number Format",
                                     "This is not a integer")
-            self.valueLineEdit.selectAll()
-            self.valueLineEdit.setFocus()
+            self.standardDialEdit.selectAll()
+            self.standardDialEdit.setFocus()
             return
-        except OutOfRangeNumberError as e:
-            QMessageBox.warning(self, "Out of Range of number", str(e))
-            self.valueLineEdit.selectAll()
-            self.valueLineEdit.setFocus()
+        except OutOfRangeError as e:
+            QMessageBox.warning(self, "Out of Range", str(e))
+            self.standardDialEdit.selectAll()
+            self.standardDialEdit.setFocus()
             return
 
-        self.result["label"] = self.textLineEdit.text()
-        self.result["comboBox"] = self.comboBox.currentText()
-        self.result["dial"] = value
+        self.values["labelText"] = self.standardLineEdit.text()
+        self.values["comboBoxIndex"] = self.standardComboBox.currentIndex()
+        self.values["dialValue"] = dialEditValue
         QDialog.accept(self)
 
-    def getResult(self):
-        return self.result
+    def getValues(self):
+        return self.values
 
 class DumbDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        textEditLabel = QLabel("Main 레이블 변경: ")
-        self.textLineEdit = QLineEdit("Hello, PyQt!")
-        
-        valueEditLabel = QLabel("Main 값 변경: ")
-        self.slider = QSlider(Qt.Horizontal)
-        self.slider.setRange(0, 100)
+        dumbLineEditLabel = QLabel("Main 레이블 변경(&L): ")
+        self.dumbLineEdit = QLineEdit()
+        dumbLineEditLabel.setBuddy(self.dumbLineEdit)
 
-        comboBoxLabel = QLabel("Combo Box(&C): ")
-        self.comboBox = QComboBox()
-        comboBoxLabel.setBuddy(self.comboBox)
-        for item in ["item1", "item2", "item3", "item4", "item5"]:
-            self.comboBox.addItem(item)
+        dumbComboBoxLabel = QLabel("Main 콤보 상자 변경(&C): ")
+        self.dumbComboBox = QComboBox()
+        dumbComboBoxLabel.setBuddy(self.dumbComboBox)
+
+        dumbSliderLabel = QLabel("Main 슬라이더 변경(&S): ")
+        self.dumbSlider = QSlider(Qt.Horizontal)
+        dumbSliderLabel.setBuddy(self.dumbSlider)
 
         widgetLayout = QFormLayout()
-        widgetLayout.addRow(textEditLabel, self.textLineEdit)
-        widgetLayout.addRow(comboBoxLabel, self.comboBox)
-        widgetLayout.addRow(valueEditLabel, self.slider)
+        widgetLayout.addRow(dumbLineEditLabel, self.dumbLineEdit)
+        widgetLayout.addRow(dumbComboBoxLabel, self.dumbComboBox)
+        widgetLayout.addRow(dumbSliderLabel, self.dumbSlider)
 
         okButton = QPushButton("확인(&O)")
         cancelButton = QPushButton("취소")
