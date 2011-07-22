@@ -17,7 +17,7 @@ from PyQt4.QtGui import *
 import simpleSignalConnectDlg as sscDlg
 import introDialog as introDlg
 
-__version__ = "3.1.1"
+__version__ = "3.1.2"
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -164,10 +164,32 @@ class MainWindow(QMainWindow):
         liveDialogAction.setStatusTip(liveDialogHelp)
         self.connect(liveDialogAction, SIGNAL("triggered()"), self.LiveCall)
 
+        # Group Action
+        messageAAction = QAction("A Action", self)
+        messageAAction.setCheckable(True)
+        messageAAction.setChecked(True)
+        messageBAction = QAction("B Action", self)
+        messageBAction.setCheckable(True)
+        messageCAction = QAction("C Action", self)
+        messageCAction.setCheckable(True)
+
+        self.connect(messageAAction, SIGNAL("toggled(bool)"), self.GroupActionMessage)
+        self.connect(messageBAction, SIGNAL("toggled(bool)"), self.GroupActionMessage)
+        self.connect(messageCAction, SIGNAL("toggled(bool)"), self.GroupActionMessage)
+
+        groupAction = QActionGroup(self)
+        groupAction.addAction(messageAAction)
+        groupAction.addAction(messageBAction)
+        groupAction.addAction(messageCAction)
+        
         ### Menu Bar ###
         # 대화 상자
-        dialogMenu = self.menuBar().addMenu("대화 상자(&A)")
+        dialogAction = self.menuBar().addAction("대화 상자(&A)")
         dialogMenuHelp = "여러 대화 상자 종류들을 포함합니다"
+        dialogAction.setToolTip(dialogMenuHelp)
+        dialogAction.setStatusTip(dialogMenuHelp)
+        dialogMenu = QMenu()
+        dialogAction.setMenu(dialogMenu)
         dialogMenu.addAction(simpleDialogAction)
         dialogMenu.addAction(signalDialogAction)
         dialogMenu.addAction(connectDialogAction)
@@ -177,9 +199,32 @@ class MainWindow(QMainWindow):
         dialogMenu.addAction(smartDialogAction)
         dialogMenu.addAction(liveDialogAction)
 
+        ### Tool Bar ###
+        # Dialog Tool Bar
+        dialogToolBar = self.addToolBar("Dialog")
+        dialogToolBar.setObjectName("DialogToolBar")
+        dialogToolBar.addAction(simpleDialogAction)
+        dialogToolBar.addAction(signalDialogAction)
+        dialogToolBar.addAction(connectDialogAction)
+        dialogToolBar.addSeparator()
+        dialogToolBar.addAction(dumbDialogAction)
+        dialogToolBar.addAction(standardDialogAction)
+        dialogToolBar.addAction(smartDialogAction)
+        dialogToolBar.addAction(liveDialogAction)
+
+        # Group Actoin Tool Bar
+        groupActionToolBar = self.addToolBar("GruopAction")
+        groupActionToolBar.setObjectName("GroupActionToolBar")
+        groupActionToolBar.addAction(messageAAction)
+        groupActionToolBar.addAction(messageBAction)
+        groupActionToolBar.addAction(messageCAction)
+
         ### Status Bar ###
-        status = self.statusBar()
-        status.showMessage("실행 완료", 5000)
+        statusBar = self.statusBar()
+        statusBarLabel = QLabel("상태표시줄")
+        statusBarLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Plain)
+        statusBar.addPermanentWidget(statusBarLabel)
+        statusBar.showMessage("실행 완료", 5000)
         
         ### Main ###
         self.liveDialog = None
@@ -194,6 +239,20 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(centralWidget)
 
         self.setWindowTitle("Main Window")
+
+        ### Context Menu ###
+        centralWidget.setContextMenuPolicy(Qt.ActionsContextMenu)
+        centralWidget.addAction(simpleDialogAction)
+        centralWidget.addAction(signalDialogAction)
+        centralWidget.addAction(connectDialogAction)
+        contextSeparator = QAction(self)
+        contextSeparator.setSeparator(True)
+        centralWidget.addAction(contextSeparator)
+        centralWidget.addAction(dumbDialogAction)
+        centralWidget.addAction(standardDialogAction)
+        centralWidget.addAction(smartDialogAction)
+        centralWidget.addAction(liveDialogAction)
+
 
     def DumbCall(self):
         dialog = introDlg.DumbDialog(self)
@@ -266,6 +325,13 @@ class MainWindow(QMainWindow):
         self.liveDialog.show()
         self.liveDialog.raise_()
         self.liveDialog.activateWindow()
+
+    def GroupActionMessage(self, isChecked):
+        action = self.sender()
+        if not (action and isChecked and isinstance(action, QAction)):
+            return
+        QMessageBox.about(self, "메시지 박스의 메시지", 
+                    "그룹 Action 중 {}이 클릭됨".format(action.text()))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
