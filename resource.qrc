@@ -1,0 +1,12 @@
+<!DOCTYPE RCC><RCC version="3.2.1">
+<qresource>
+<file alias="mainIcon.png">image/mainIcon.png</file>
+<file alias="simpleDialogIcon.png">image/simpleDialogIcon.png</file>
+<file alias="signalDialogIcon.png">image/signalDialogIcon.png</file>
+<file alias="connectDialogIcon.png">image/connectDialogIcon.png</file>
+<file alias="dumbDialogIcon.png">image/dumbDialogIcon.png</file>
+<file alias="standardDialogIcon.png">image/standardDialogIcon.png</file>
+<file alias="smartDialogIcon.png">image/smartDialogIcon.png</file>
+<file alias="liveDialogIcon.png">image/liveDialogIcon.png</file>
+</qresource>
+</RCC>

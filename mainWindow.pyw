@@ -16,8 +16,9 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import simpleSignalConnectDlg as sscDlg
 import introDialog as introDlg
+import qrc_resource
 
-__version__ = "3.1.2"
+__version__ = "3.2.1"
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -106,7 +107,8 @@ class MainWindow(QMainWindow):
 
         ### Actions ###
         # Simple Dialog Open
-        simpleDialogAction = QAction("단순 대화상자", self)
+        simpleDialogAction = QAction(QIcon(":simpleDialogIcon.png"), 
+                                            "단순 대화상자", self)
         simpleDialogAction.setShortcut("Ctrl+S")
         simpleDialogHelp = "단순한 대화 상자를 엽니다"
         simpleDialogAction.setToolTip(simpleDialogHelp)
@@ -115,7 +117,8 @@ class MainWindow(QMainWindow):
                         lambda : sscDlg.SimpleDialog(self).exec_())
 
         # Signal Dialog Open
-        signalDialogAction = QAction("시그널 대화상자", self)
+        signalDialogAction = QAction(QIcon(":signalDialogIcon.png"),
+                                        "시그널 대화상자", self)
         signalDialogAction.setShortcut("Ctrl+G")
         signalDialogHelp = "여러 시그널로 된 대화 상자를 엽니다"
         signalDialogAction.setToolTip(signalDialogHelp)
@@ -124,7 +127,8 @@ class MainWindow(QMainWindow):
                         lambda : sscDlg.SignalDialog(self).exec_())
 
         # Connect Dialog Open
-        connectDialogAction = QAction("Connect 대화상자", self)
+        connectDialogAction = QAction(QIcon(":connectDialogIcon.png"), 
+                                        "Connect 대화상자", self)
         connectDialogAction.setShortcut("Ctrl+E")
         connectDialogHelp = "여러 연결 방식을 갖는 버튼 대화 상자를 엽니다"
         connectDialogAction.setToolTip(connectDialogHelp)
@@ -133,7 +137,8 @@ class MainWindow(QMainWindow):
                         lambda : sscDlg.ConnectDialog(self).exec_())
 
         # Dumb Dialog Open
-        dumbDialogAction = QAction("Dumb 대화상자", self)
+        dumbDialogAction = QAction(QIcon(":dumbDialogIcon.png"),
+                                    "Dumb 대화상자", self)
         dumbDialogAction.setShortcut("Ctrl+M")
         dumbDialogHelp = "Dumb 및 Modal 대화 상자를 엽니다"
         dumbDialogAction.setToolTip(dumbDialogHelp)
@@ -141,7 +146,8 @@ class MainWindow(QMainWindow):
         self.connect(dumbDialogAction, SIGNAL("triggered()"), self.DumbCall)
 
         # Standard Dialog Open
-        standardDialogAction = QAction("Standard 대화상자", self)
+        standardDialogAction = QAction(QIcon(":standardDialogIcon.png"), 
+                                        "Standard 대화상자", self)
         standardDialogAction.setShortcut("Ctrl+R")
         standardDialogHelp = "Standard 및 Modal 대화 상자를 엽니다"
         standardDialogAction.setToolTip(standardDialogHelp)
@@ -149,7 +155,8 @@ class MainWindow(QMainWindow):
         self.connect(standardDialogAction, SIGNAL("triggered()"), self.StandardCall)
 
         # Smart Dialog Open
-        smartDialogAction = QAction("Smart 대화상자", self)
+        smartDialogAction = QAction(QIcon(":smartDialogIcon.png"), 
+                                    "Smart 대화상자", self)
         smartDialogAction.setShortcut("Ctrl+M")
         smartDialogHelp = "Smart 및 Modaless 대화 상자를 엽니다"
         smartDialogAction.setToolTip(smartDialogHelp)
@@ -157,7 +164,8 @@ class MainWindow(QMainWindow):
         self.connect(smartDialogAction, SIGNAL("triggered()"), self.SmartCall)
 
         # Live Dialog Open
-        liveDialogAction = QAction("Live 대화상자", self)
+        liveDialogAction = QAction(QIcon(":liveDialogIcon.png"), 
+                                    "Live 대화상자", self)
         liveDialogAction.setShortcut("Ctrl+L")
         liveDialogHelp = "Live 및 Modaless 대화 상자를 엽니다"
         liveDialogAction.setToolTip(liveDialogHelp)
@@ -330,11 +338,13 @@ class MainWindow(QMainWindow):
         action = self.sender()
         if not (action and isChecked and isinstance(action, QAction)):
             return
-        QMessageBox.about(self, "메시지 박스의 메시지", 
-                    "그룹 Action 중 {}이 클릭됨".format(action.text()))
+        QMessageBox(QMessageBox.Information, "메시지 박스의 메시지",
+                    "그룹 Action 중 {}이 클릭됨".format(action.text()),
+                    QMessageBox.Ok, self).open()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon(":mainIcon.png"))
     mainWindow = MainWindow()
     mainWindow.show()
     app.exec_()
