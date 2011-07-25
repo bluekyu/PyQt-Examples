@@ -1,0 +1,20 @@
+1. 내용
+ PyQt 예제 프로그램입니다. PyQt를 공부하면서 배운 내용을 정리하는 차원에서
+ 쌓아 나간 프로그램입니다.
+
+2. 사이트
+ 블로그: www.bluekyu.me
+ 프로젝트 저장소: https://github.com/bluekyu/PyQt-Examples
+
+3. 실행 방법
+ Python 3 와 PyQt 4.8.2 이상을 설치하신 후 mainWindow.py 파일을 실행시키면
+ 됩니다. 윈도우즈에서는 마우스로 가능하지만, 리눅스의 경우 실행 권한을
+ 주지 않았으므로, 실행 권한을 준 후 마우스로 실행하거나 터미널에서 명령을
+ 입력해서 실행하십시오
+
+4. 라이센스
+ 프로그램의 라이센스는 GPL-2 이상입니다. 아이콘 중 대화 상자를 위한 아이콘은
+ KDE의 아이콘을 변경한 것입니다. 이는 LGPL 을 따릅니다. 그리고 tuxIcon 은
+ public domain을 따릅니다. (http://commons.wikimedia.org/wiki/File:Tux-G2.png)
+ 또, kubuntuLogoIcon 은 Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) 을
+ 따르고 mainIcon 은 이 둘을 섞은 것입니다.
