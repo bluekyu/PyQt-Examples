@@ -8,5 +8,6 @@
 <file alias="standardDialogIcon.png">image/standardDialogIcon.png</file>
 <file alias="smartDialogIcon.png">image/smartDialogIcon.png</file>
 <file alias="liveDialogIcon.png">image/liveDialogIcon.png</file>
+<file alias="kubuntuLogoIcon.png">image/kubuntuLogoIcon.png</file>
 </qresource>
 </RCC>

@@ -18,7 +18,7 @@ import simpleSignalConnectDlg as sscDlg
 import introDialog as introDlg
 import qrc_resource
 
-__version__ = "3.2.1"
+__version__ = "3.2.2"
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -189,6 +189,21 @@ class MainWindow(QMainWindow):
         groupAction.addAction(messageAAction)
         groupAction.addAction(messageBAction)
         groupAction.addAction(messageCAction)
+
+        # Open Image Action
+        openImageAction = QAction("이미지 열기", self)
+        openImageAction.setShortcut("Ctrl+I")
+        openImageHelp = "이미지를 나타냅니다"
+        openImageAction.setToolTip(openImageHelp)
+        openImageAction.setStatusTip(openImageHelp)
+        self.connect(openImageAction, SIGNAL("triggered()"), self.OpenImage)
+
+        # Image Zoom Action
+        imageZoomAction = QAction("이미지 확대/축소", self)
+        imageZoomHelp = "이미지를 확대하거나 축소합니다."
+        imageZoomAction.setToolTip(imageZoomHelp)
+        imageZoomAction.setStatusTip(imageZoomHelp)
+        self.connect(imageZoomAction, SIGNAL("triggered()"), self.ImageZoom)
         
         ### Menu Bar ###
         # 대화 상자
@@ -206,6 +221,31 @@ class MainWindow(QMainWindow):
         dialogMenu.addAction(standardDialogAction)
         dialogMenu.addAction(smartDialogAction)
         dialogMenu.addAction(liveDialogAction)
+
+        ### Dock Widget ###
+        # List Dock Widget
+        listDockWidget = QDockWidget("리스트 Dock", self)
+        listDockWidget.setObjectName("ListDockWidget")
+        self.listWidget = QListWidget()
+        listDockWidget.setWidget(self.listWidget)
+        self.addDockWidget(Qt.RightDockWidgetArea, listDockWidget)
+
+        self.listWidget.addItems(["리스트 항목 {}".format(k) 
+                                    for k in range(1, 5)])
+
+        # Image Label Dock Widget
+        imageLabelDock = QDockWidget("이미지 Dock", self)
+        imageLabelDock.setObjectName("TextBrowserDockWidget")
+        self.imageLabel = QLabel()
+        imageLabelDock.setWidget(self.imageLabel)
+        self.addDockWidget(Qt.BottomDockWidgetArea, imageLabelDock)
+
+        self.imageLabel.setMinimumSize(200, 200)
+        self.imageLabel.setAlignment(Qt.AlignCenter)
+        self.imageLabel.setFrameShape(QFrame.StyledPanel)
+
+        self.image = QImage(":kubuntuLogoIcon.png")
+        self.imageLabel.setPixmap(QPixmap.fromImage(self.image))
 
         ### Tool Bar ###
         # Dialog Tool Bar
@@ -249,6 +289,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Main Window")
 
         ### Context Menu ###
+        # Central Widget
         centralWidget.setContextMenuPolicy(Qt.ActionsContextMenu)
         centralWidget.addAction(simpleDialogAction)
         centralWidget.addAction(signalDialogAction)
@@ -261,6 +302,10 @@ class MainWindow(QMainWindow):
         centralWidget.addAction(smartDialogAction)
         centralWidget.addAction(liveDialogAction)
 
+        # Image Label in Dock
+        self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
+        self.imageLabel.addAction(openImageAction)
+        self.imageLabel.addAction(imageZoomAction)
 
     def DumbCall(self):
         dialog = introDlg.DumbDialog(self)
@@ -341,6 +386,76 @@ class MainWindow(QMainWindow):
         QMessageBox(QMessageBox.Information, "메시지 박스의 메시지",
                     "그룹 Action 중 {}이 클릭됨".format(action.text()),
                     QMessageBox.Ok, self).open()
+
+    def OpenImage(self):
+        imageFormats = ["{0} 파일 (*.{0})".format(ext.data().decode()) for ext in
+                        QImageReader.supportedImageFormats()]
+        imageFormats.append("모든 파일 (*.*)")
+        fileDialog = QFileDialog(self, "이미지 열기", ".")
+        fileDialog.setFilters(imageFormats)
+        fileDialog.setAcceptMode(QFileDialog.AcceptOpen)
+        if fileDialog.exec_():
+            imageLink = fileDialog.selectedFiles()[0]
+            self.image = QImage(imageLink)
+            self.imageLabel.setPixmap(QPixmap.fromImage(self.image))
+    
+    def ImageZoom(self):
+        if self.image.isNull():
+            return
+        
+        zoomDialog = QDialog(self)
+
+        widthSpinBox = QSpinBox()
+        widthSpinBox.setRange(0, 1000)
+        widthSpinBox.setSuffix(" %")
+        heightSpinBox = QSpinBox()
+        heightSpinBox.setRange(0, 1000)
+        heightSpinBox.setSuffix(" %")
+        
+        from math import ceil
+        image = self.imageLabel.pixmap().toImage()
+        widthZoom = ceil(image.width() * 100 / self.image.width())
+        heightZoom = ceil(image.height() * 100 / self.image.height())
+        widthSpinBox.setValue(widthZoom)
+        heightSpinBox.setValue(heightZoom)
+
+        sameZoomCheck = QCheckBox("같은 비율 유지")
+
+        def ValueSameSet(value):
+            if sameZoomCheck.isChecked():
+                widthSpinBox.setValue(value)
+                heightSpinBox.setValue(value)
+        
+        self.connect(widthSpinBox, SIGNAL("valueChanged(int)"),        
+                        ValueSameSet)
+        self.connect(heightSpinBox, SIGNAL("valueChanged(int)"),
+                        ValueSameSet)
+        self.connect(sameZoomCheck, SIGNAL("stateChanged(int)"),
+                    lambda: ValueSameSet(widthSpinBox.value()))
+        
+        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | 
+                                        QDialogButtonBox.Cancel)
+        self.connect(buttonBox, SIGNAL("accepted()"), zoomDialog,
+                        SLOT("accept()"))
+        self.connect(buttonBox, SIGNAL("rejected()"), zoomDialog,
+                        SLOT("reject()"))
+
+        layout = QFormLayout()
+        layout.addRow(QLabel("너비: "), widthSpinBox)
+        layout.addRow(QLabel("높이: "), heightSpinBox)
+        layout.addWidget(sameZoomCheck)
+        layout.addWidget(buttonBox)
+
+        zoomDialog.setLayout(layout)
+        zoomDialog.setWindowTitle("이미지 확대/축소")
+
+        if zoomDialog.exec_():
+            widthZoom = widthSpinBox.value()
+            heightZoom = heightSpinBox.value()
+            width = self.image.width() * widthZoom / 100
+            height = self.image.height() * heightZoom / 100
+            image = self.image.scaled(width, height)
+            self.imageLabel.setPixmap(QPixmap.fromImage(image))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
