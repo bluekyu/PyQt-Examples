@@ -18,7 +18,7 @@ import simpleSignalConnectDlg as sscDlg
 import introDialog as introDlg
 import qrc_resource
 
-__version__ = "3.2.2"
+__version__ = "3.2.3"
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -246,6 +246,8 @@ class MainWindow(QMainWindow):
 
         self.image = QImage(":kubuntuLogoIcon.png")
         self.imageLabel.setPixmap(QPixmap.fromImage(self.image))
+        self.imageZoom = (100, 100)
+        self.sameZoomCheckState = False
 
         ### Tool Bar ###
         # Dialog Tool Bar
@@ -406,23 +408,22 @@ class MainWindow(QMainWindow):
         zoomDialog = QDialog(self)
 
         widthSpinBox = QSpinBox()
-        widthSpinBox.setRange(0, 1000)
+        widthSpinBox.setRange(0, 500)
         widthSpinBox.setSuffix(" %")
         heightSpinBox = QSpinBox()
-        heightSpinBox.setRange(0, 1000)
+        heightSpinBox.setRange(0, 500)
         heightSpinBox.setSuffix(" %")
         
-        from math import ceil
         image = self.imageLabel.pixmap().toImage()
-        widthZoom = ceil(image.width() * 100 / self.image.width())
-        heightZoom = ceil(image.height() * 100 / self.image.height())
-        widthSpinBox.setValue(widthZoom)
-        heightSpinBox.setValue(heightZoom)
 
-        sameZoomCheck = QCheckBox("같은 비율 유지")
+        widthSpinBox.setValue(self.imageZoom[0])
+        heightSpinBox.setValue(self.imageZoom[1])
+
+        sameZoomCheckBox = QCheckBox("같은 비율 유지")
+        sameZoomCheckBox.setChecked(self.sameZoomCheckState)
 
         def ValueSameSet(value):
-            if sameZoomCheck.isChecked():
+            if sameZoomCheckBox.isChecked():
                 widthSpinBox.setValue(value)
                 heightSpinBox.setValue(value)
         
@@ -430,7 +431,7 @@ class MainWindow(QMainWindow):
                         ValueSameSet)
         self.connect(heightSpinBox, SIGNAL("valueChanged(int)"),
                         ValueSameSet)
-        self.connect(sameZoomCheck, SIGNAL("stateChanged(int)"),
+        self.connect(sameZoomCheckBox, SIGNAL("stateChanged(int)"),
                     lambda: ValueSameSet(widthSpinBox.value()))
         
         buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | 
@@ -443,19 +444,19 @@ class MainWindow(QMainWindow):
         layout = QFormLayout()
         layout.addRow(QLabel("너비: "), widthSpinBox)
         layout.addRow(QLabel("높이: "), heightSpinBox)
-        layout.addWidget(sameZoomCheck)
+        layout.addWidget(sameZoomCheckBox)
         layout.addWidget(buttonBox)
 
         zoomDialog.setLayout(layout)
         zoomDialog.setWindowTitle("이미지 확대/축소")
 
         if zoomDialog.exec_():
-            widthZoom = widthSpinBox.value()
-            heightZoom = heightSpinBox.value()
-            width = self.image.width() * widthZoom / 100
-            height = self.image.height() * heightZoom / 100
+            self.imageZoom = (widthSpinBox.value(), heightSpinBox.value())
+            width = self.image.width() * self.imageZoom[0] // 100
+            height = self.image.height() * self.imageZoom[1] // 100
             image = self.image.scaled(width, height)
             self.imageLabel.setPixmap(QPixmap.fromImage(image))
+            self.sameZoomCheckState = sameZoomCheckBox.isChecked()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
