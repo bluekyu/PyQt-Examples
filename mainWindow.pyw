@@ -19,7 +19,7 @@ import introDialog as introDlg
 import qrc_resource
 
 __version__ = "3.3.1"
-__program_name__ = "PyQt4 Example"
+__program_name__ = "PyQt Example"
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
