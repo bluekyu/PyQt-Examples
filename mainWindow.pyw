@@ -18,7 +18,8 @@ import simpleSignalConnectDlg as sscDlg
 import introDialog as introDlg
 import qrc_resource
 
-__version__ = "3.2.3"
+__version__ = "3.3.1"
+__program_name__ = "PyQt4 Example"
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -173,12 +174,12 @@ class MainWindow(QMainWindow):
         self.connect(liveDialogAction, SIGNAL("triggered()"), self.LiveCall)
 
         # Group Action
-        messageAAction = QAction("A Action", self)
+        messageAAction = QAction(QIcon(":iconA.png"), "A Action", self)
         messageAAction.setCheckable(True)
         messageAAction.setChecked(True)
-        messageBAction = QAction("B Action", self)
+        messageBAction = QAction(QIcon(":iconB.png"), "B Action", self)
         messageBAction.setCheckable(True)
-        messageCAction = QAction("C Action", self)
+        messageCAction = QAction(QIcon(":iconC.png"), "C Action", self)
         messageCAction.setCheckable(True)
 
         self.connect(messageAAction, SIGNAL("toggled(bool)"), self.GroupActionMessage)
@@ -191,28 +192,35 @@ class MainWindow(QMainWindow):
         groupAction.addAction(messageCAction)
 
         # Open Image Action
-        openImageAction = QAction("이미지 열기", self)
+        openImageAction = QAction(QIcon(":openImage.png"), "이미지 열기", self)
         openImageAction.setShortcut("Ctrl+I")
         openImageHelp = "이미지를 나타냅니다"
         openImageAction.setToolTip(openImageHelp)
         openImageAction.setStatusTip(openImageHelp)
         self.connect(openImageAction, SIGNAL("triggered()"), self.OpenImage)
 
-        # Image Zoom Action
-        imageZoomAction = QAction("이미지 확대/축소", self)
+        # Zoom Image Action
+        zoomImageAction = QAction(QIcon(":zoomImage.png"), "이미지 확대/축소", self)
         imageZoomHelp = "이미지를 확대하거나 축소합니다."
-        imageZoomAction.setToolTip(imageZoomHelp)
-        imageZoomAction.setStatusTip(imageZoomHelp)
-        self.connect(imageZoomAction, SIGNAL("triggered()"), self.ImageZoom)
+        zoomImageAction.setToolTip(imageZoomHelp)
+        zoomImageAction.setStatusTip(imageZoomHelp)
+        self.connect(zoomImageAction, SIGNAL("triggered()"), self.ImageZoom)
+
+        # Help About Action
+        helpAboutAction = QAction("{} 정보".format(__program_name__), self)
+        helpAboutHelp = "{}에 대한 정보를 보여줍니다".format(__program_name__)
+        helpAboutAction.setToolTip(helpAboutHelp)
+        helpAboutAction.setStatusTip(helpAboutHelp)
+        self.connect(helpAboutAction, SIGNAL("triggered()"), self.HelpAbout)
         
         ### Menu Bar ###
         # 대화 상자
-        dialogAction = self.menuBar().addAction("대화 상자(&A)")
+        dialogMenuAction = self.menuBar().addAction("대화 상자(&A)")
         dialogMenuHelp = "여러 대화 상자 종류들을 포함합니다"
-        dialogAction.setToolTip(dialogMenuHelp)
-        dialogAction.setStatusTip(dialogMenuHelp)
+        dialogMenuAction.setToolTip(dialogMenuHelp)
+        dialogMenuAction.setStatusTip(dialogMenuHelp)
         dialogMenu = QMenu()
-        dialogAction.setMenu(dialogMenu)
+        dialogMenuAction.setMenu(dialogMenu)
         dialogMenu.addAction(simpleDialogAction)
         dialogMenu.addAction(signalDialogAction)
         dialogMenu.addAction(connectDialogAction)
@@ -221,6 +229,25 @@ class MainWindow(QMainWindow):
         dialogMenu.addAction(standardDialogAction)
         dialogMenu.addAction(smartDialogAction)
         dialogMenu.addAction(liveDialogAction)
+
+        # 이미지
+        imageMenuAction = self.menuBar().addAction("이미지(&M)")
+        imageMenuHelp = "이미지를 조절합니다"
+        imageMenuAction.setToolTip(imageMenuHelp)
+        imageMenuAction.setStatusTip(imageMenuHelp)
+        imageMenu = QMenu()
+        imageMenuAction.setMenu(imageMenu)
+        imageMenu.addAction(openImageAction)
+        imageMenu.addAction(zoomImageAction)
+
+        # 도움말
+        aboutMenuAction = self.menuBar().addAction("도움말(&H)")
+        aboutMenuHelp = "도움말 및 정보를 포함합니다"
+        aboutMenuAction.setToolTip(aboutMenuHelp)
+        aboutMenuAction.setStatusTip(aboutMenuHelp)
+        aboutMenu = QMenu()
+        aboutMenuAction.setMenu(aboutMenu)
+        aboutMenu.addAction(helpAboutAction)
 
         ### Dock Widget ###
         # List Dock Widget
@@ -307,7 +334,7 @@ class MainWindow(QMainWindow):
         # Image Label in Dock
         self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.imageLabel.addAction(openImageAction)
-        self.imageLabel.addAction(imageZoomAction)
+        self.imageLabel.addAction(zoomImageAction)
 
     def DumbCall(self):
         dialog = introDlg.DumbDialog(self)
@@ -457,6 +484,15 @@ class MainWindow(QMainWindow):
             image = self.image.scaled(width, height)
             self.imageLabel.setPixmap(QPixmap.fromImage(image))
             self.sameZoomCheckState = sameZoomCheckBox.isChecked()
+
+    def HelpAbout(self):
+        from platform import python_version, system
+        QMessageBox.about(self, "{} 정보".format(__program_name__),
+                        """<b>{}</b> v. {}
+                        <p>이 프로그램은 PyQt4에 대한 예제 프로그램입니다.</p>
+                        <p>Python {} - Qt {} - PyQt {} on {}</p>""".format(
+                        __program_name__, __version__, python_version(),
+                        QT_VERSION_STR, PYQT_VERSION_STR, system()))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
