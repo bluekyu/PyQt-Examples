@@ -95,83 +95,57 @@ class MainWindow(QMainWindow):
 
         ### Actions ###
         # Simple Dialog Open
-        simpleDialogAction = QAction(QIcon(":simpleDialogIcon.png"), 
-                                            "단순 대화상자", self)
-        simpleDialogAction.setShortcut("Ctrl+S")
-        simpleDialogHelp = "단순한 대화 상자를 엽니다"
-        simpleDialogAction.setToolTip(simpleDialogHelp)
-        simpleDialogAction.setStatusTip(simpleDialogHelp)
-        self.connect(simpleDialogAction, SIGNAL("triggered()"),
-                        lambda : sscDlg.SimpleDialog(self).exec_())
+        simpleDialogAction = self.CreateAction("단순 대화상자",
+                                ":simpleDialogIcon.png", "Ctrl+S",
+                                "단순한 대화 상자를 엽니다",
+                                lambda: sscDlg.SimpleDialog(self).exec_())
 
         # Signal Dialog Open
-        signalDialogAction = QAction(QIcon(":signalDialogIcon.png"),
-                                        "시그널 대화상자", self)
-        signalDialogAction.setShortcut("Ctrl+G")
-        signalDialogHelp = "여러 시그널로 된 대화 상자를 엽니다"
-        signalDialogAction.setToolTip(signalDialogHelp)
-        signalDialogAction.setStatusTip(signalDialogHelp)
-        self.connect(signalDialogAction, SIGNAL("triggered()"),
-                        lambda : sscDlg.SignalDialog(self).exec_())
+        signalDialogAction = self.CreateAction("시그널 대화상자",
+                                ":signalDialogIcon.png", "Ctrl+G",
+                                "여러 시그널로 된 대화 상자를 엽니다",
+                                lambda: sscDlg.SignalDialog(self).exec_())
 
         # Connect Dialog Open
-        connectDialogAction = QAction(QIcon(":connectDialogIcon.png"), 
-                                        "Connect 대화상자", self)
-        connectDialogAction.setShortcut("Ctrl+E")
-        connectDialogHelp = "여러 연결 방식을 갖는 버튼 대화 상자를 엽니다"
-        connectDialogAction.setToolTip(connectDialogHelp)
-        connectDialogAction.setStatusTip(connectDialogHelp)
-        self.connect(connectDialogAction, SIGNAL("triggered()"),
-                        lambda : sscDlg.ConnectDialog(self).exec_())
+        connectDialogAction = self.CreateAction("Connect 대화상자",
+                                ":connectDialogIcon.png", "Ctrl+E",
+                            "여러 연결 방식을 갖는 버튼 대화 상자를 엽니다",
+                                lambda: sscDlg.ConnectDialog(self).exec_())
 
         # Dumb Dialog Open
-        dumbDialogAction = QAction(QIcon(":dumbDialogIcon.png"),
-                                    "Dumb 대화상자", self)
-        dumbDialogAction.setShortcut("Ctrl+M")
-        dumbDialogHelp = "Dumb 및 Modal 대화 상자를 엽니다"
-        dumbDialogAction.setToolTip(dumbDialogHelp)
-        dumbDialogAction.setStatusTip(dumbDialogHelp)
-        self.connect(dumbDialogAction, SIGNAL("triggered()"), self.DumbCall)
+        dumbDialogAction = self.CreateAction("Dumb 대화상자",
+                                ":dumbDialogIcon.png", "Ctrl+M",
+                                "Dumb 및 Modal 대화 상자를 엽니다",
+                                self.DumbCall)
 
         # Standard Dialog Open
-        standardDialogAction = QAction(QIcon(":standardDialogIcon.png"), 
-                                        "Standard 대화상자", self)
-        standardDialogAction.setShortcut("Ctrl+R")
-        standardDialogHelp = "Standard 및 Modal 대화 상자를 엽니다"
-        standardDialogAction.setToolTip(standardDialogHelp)
-        standardDialogAction.setStatusTip(standardDialogHelp)
-        self.connect(standardDialogAction, SIGNAL("triggered()"), self.StandardCall)
+        standardDialogAction = self.CreateAction("Standard 대화상자",
+                                ":standardDialogIcon.png", "Ctrl+R",
+                                "Standard 및 Modal 대화 상자를 엽니다",
+                                self.StandardCall)
 
         # Smart Dialog Open
-        smartDialogAction = QAction(QIcon(":smartDialogIcon.png"), 
-                                    "Smart 대화상자", self)
-        smartDialogAction.setShortcut("Ctrl+M")
-        smartDialogHelp = "Smart 및 Modaless 대화 상자를 엽니다"
-        smartDialogAction.setToolTip(smartDialogHelp)
-        smartDialogAction.setStatusTip(smartDialogHelp)
-        self.connect(smartDialogAction, SIGNAL("triggered()"), self.SmartCall)
+        smartDialogAction = self.CreateAction("Smart 대화상자",
+                                ":smartDialogIcon.png", "Ctrl+M",
+                                "Smart 및 Modaless 대화 상자를 엽니다",
+                                self.SmartCall)
 
         # Live Dialog Open
-        liveDialogAction = QAction(QIcon(":liveDialogIcon.png"), 
-                                    "Live 대화상자", self)
-        liveDialogAction.setShortcut("Ctrl+L")
-        liveDialogHelp = "Live 및 Modaless 대화 상자를 엽니다"
-        liveDialogAction.setToolTip(liveDialogHelp)
-        liveDialogAction.setStatusTip(liveDialogHelp)
-        self.connect(liveDialogAction, SIGNAL("triggered()"), self.LiveCall)
+        liveDialogAction = self.CreateAction("Live 대화상자",
+                                ":liveDialogIcon.png", "Ctrl+L",
+                                "Live 및 Modaless 대화 상자를 엽니다",
+                                self.LiveCall)
 
         # Group Action
-        messageAAction = QAction(QIcon(":iconA.png"), "A Action", self)
-        messageAAction.setCheckable(True)
+        messageAAction = self.CreateAction("A Action", ":iconA.png", None, None,
+                            self.GroupActionMessage, True, "toggled(bool)")
+        messageAAction.blockSignals(True)
         messageAAction.setChecked(True)
-        messageBAction = QAction(QIcon(":iconB.png"), "B Action", self)
-        messageBAction.setCheckable(True)
-        messageCAction = QAction(QIcon(":iconC.png"), "C Action", self)
-        messageCAction.setCheckable(True)
-
-        self.connect(messageAAction, SIGNAL("toggled(bool)"), self.GroupActionMessage)
-        self.connect(messageBAction, SIGNAL("toggled(bool)"), self.GroupActionMessage)
-        self.connect(messageCAction, SIGNAL("toggled(bool)"), self.GroupActionMessage)
+        messageAAction.blockSignals(False)
+        messageBAction = self.CreateAction("B Action", ":iconB.png", None, None,
+                            self.GroupActionMessage, True, "toggled(bool)")
+        messageCAction = self.CreateAction("C Action", ":iconC.png", None, None,
+                            self.GroupActionMessage, True, "toggled(bool)")
 
         groupAction = QActionGroup(self)
         groupAction.addAction(messageAAction)
@@ -179,26 +153,19 @@ class MainWindow(QMainWindow):
         groupAction.addAction(messageCAction)
 
         # Open Image Action
-        openImageAction = QAction(QIcon(":openImage.png"), "이미지 열기", self)
-        openImageAction.setShortcut("Ctrl+I")
-        openImageHelp = "이미지를 나타냅니다"
-        openImageAction.setToolTip(openImageHelp)
-        openImageAction.setStatusTip(openImageHelp)
-        self.connect(openImageAction, SIGNAL("triggered()"), self.OpenImage)
+        openImageAction = self.CreateAction("이미지 열기", ":openImage.png",
+                            "Ctrl+I", "이미지를 나타냅니다", self.OpenImage)
 
         # Zoom Image Action
-        zoomImageAction = QAction(QIcon(":zoomImage.png"), "이미지 확대/축소", self)
-        imageZoomHelp = "이미지를 확대하거나 축소합니다."
-        zoomImageAction.setToolTip(imageZoomHelp)
-        zoomImageAction.setStatusTip(imageZoomHelp)
-        self.connect(zoomImageAction, SIGNAL("triggered()"), self.ImageZoom)
+        zoomImageAction = self.CreateAction("이미지 확대/축소",
+                                ":zoomImage.png", None,
+                                "이미지를 확대하거나 축소합니다.",
+                                self.ImageZoom)
 
         # Help About Action
-        helpAboutAction = QAction("{} 정보".format(__program_name__), self)
-        helpAboutHelp = "{}에 대한 정보를 보여줍니다".format(__program_name__)
-        helpAboutAction.setToolTip(helpAboutHelp)
-        helpAboutAction.setStatusTip(helpAboutHelp)
-        self.connect(helpAboutAction, SIGNAL("triggered()"), self.HelpAbout)
+        helpAboutAction = self.CreateAction("{} 정보".format(__program_name__),
+                            None, None, "{}에 대한 정보를 보여줍니다.".format(
+                            __program_name__), self.HelpAbout)
         
         ### Menu Bar ###
         # 대화 상자
@@ -322,6 +289,24 @@ class MainWindow(QMainWindow):
         self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.imageLabel.addAction(openImageAction)
         self.imageLabel.addAction(zoomImageAction)
+
+    ### Method ###
+    def CreateAction(self, name, icon=None, shortcut=None, tipHelp=None, 
+                            slot=None, checkable=False, signal="triggered()"):
+        action = QAction(name, self)
+        if icon:
+            action.setIcon(QIcon(icon))
+        if shortcut:
+            action.setShortcut(shortcut)
+        if tipHelp:
+            action.setToolTip(tipHelp)
+            action.setStatusTip(tipHelp)
+        if slot:
+            self.connect(action, SIGNAL(signal), slot)
+        if checkable:
+            action.setCheckable(True)
+
+        return action
 
     def DumbCall(self):
         dialog = introDlg.DumbDialog(self)
