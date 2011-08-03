@@ -32,18 +32,16 @@ class MainWindow(QMainWindow):
         buttonGroup.setLayout(buttonLayout)
 
         # Push Button
-        mainButtonLabel = QLabel("버튼: ")
         self.mainButton = QPushButton("버튼(&B)")
         buttonMessageBox = QMessageBox(QMessageBox.Information, "버튼 메시지",
                             "버튼이 클릭 됨", QMessageBox.Ok, self)
         self.connect(self.mainButton, SIGNAL("clicked()"), buttonMessageBox.open)
 
         # Check Box
-        mainCheckBoxLabel = QLabel("체크 상자: ")
         self.mainCheckBox = QCheckBox("체크(&K)")
         
-        buttonLayout.addRow(mainButtonLabel, self.mainButton)
-        buttonLayout.addRow(mainCheckBoxLabel, self.mainCheckBox)
+        buttonLayout.addRow("버튼: ", self.mainButton)
+        buttonLayout.addRow("체크 상자: ", self.mainCheckBox)
 
         ### Input Widgets ###
         inputGroup = QGroupBox()
@@ -52,20 +50,14 @@ class MainWindow(QMainWindow):
         inputGroup.setLayout(inputLayout)
         
         # Combo Box
-        mainComboBoxLabel = QLabel("콤보 상자(&C): ")
         self.mainComboBox = QComboBox()
-        mainComboBoxLabel.setBuddy(self.mainComboBox)
         self.mainComboBox.addItems(["항목 1", "항목 2", "항목 3", "항목 4"])
 
         # Line Edit
-        mainLineEditLabel = QLabel("라인 편집(&I): ")
         self.mainLineEdit = QLineEdit("편집 내용")
-        mainLineEditLabel.setBuddy(self.mainLineEdit)
 
         # Spin Box
-        mainSpinBoxLabel = QLabel("스핀 상자(&S): ")
         self.mainSpinBox = QSpinBox()
-        mainSpinBoxLabel.setBuddy(self.mainSpinBox)
         self.mainSpinBox.setRange(-1000, 1000)
         self.mainSpinBox.setValue(0)
         self.mainSpinBox.setPrefix("Prefix ")
@@ -73,27 +65,23 @@ class MainWindow(QMainWindow):
         self.mainSpinBox.setAccelerated(True)
 
         # Dial
-        mainDialLabel = QLabel("다이얼(&D): ")
         self.mainDial = QDial()
-        mainDialLabel.setBuddy(self.mainDial)
         self.mainDial.setMinimumSize(100, 100)
         self.mainDial.setRange(-100, 100)
         self.mainDial.setValue(0)
         self.mainDial.setNotchesVisible(True)
 
         # Slider
-        mainSliderLabel = QLabel("슬라이더(&L): ")
         self.mainSlider = QSlider(Qt.Horizontal)
-        mainSliderLabel.setBuddy(self.mainSlider)
         self.mainSlider.setRange(-100, 100)
         self.mainSlider.setValue(0)
         self.mainSlider.setTickPosition(QSlider.TicksBelow)
 
-        inputLayout.addRow(mainComboBoxLabel, self.mainComboBox)
-        inputLayout.addRow(mainLineEditLabel, self.mainLineEdit)
-        inputLayout.addRow(mainSpinBoxLabel, self.mainSpinBox)
-        inputLayout.addRow(mainDialLabel, self.mainDial)
-        inputLayout.addRow(mainSliderLabel, self.mainSlider)
+        inputLayout.addRow("콤보 상자(&C): ", self.mainComboBox)
+        inputLayout.addRow("라인 편집(&I): ", self.mainLineEdit)
+        inputLayout.addRow("스핀 상자(&S): ", self.mainSpinBox)
+        inputLayout.addRow("다이얼(&D): ", self.mainDial)
+        inputLayout.addRow("슬라이더(&L): ", self.mainSlider)
 
         ### Display Widgets ###
         displayGroup = QGroupBox()
@@ -101,10 +89,9 @@ class MainWindow(QMainWindow):
         displayLayout = QFormLayout()
         displayGroup.setLayout(displayLayout)
 
-        mainLabelLabel = QLabel("레이블: ")
         self.mainLabel = QLabel("레이블 내용")
 
-        displayLayout.addRow(mainLabelLabel, self.mainLabel)
+        displayLayout.addRow("레이블: ", self.mainLabel)
 
         ### Actions ###
         # Simple Dialog Open
@@ -469,8 +456,8 @@ class MainWindow(QMainWindow):
                         SLOT("reject()"))
 
         layout = QFormLayout()
-        layout.addRow(QLabel("너비: "), widthSpinBox)
-        layout.addRow(QLabel("높이: "), heightSpinBox)
+        layout.addRow("너비: ", widthSpinBox)
+        layout.addRow("높이: ", heightSpinBox)
         layout.addWidget(sameZoomCheckBox)
         layout.addWidget(buttonBox)
 
