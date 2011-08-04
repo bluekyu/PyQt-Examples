@@ -18,7 +18,7 @@ import simpleSignalConnectDlg as sscDlg
 import introDialog as introDlg
 import qrc_resource
 
-__version__ = "3.3.1"
+__version__ = "3.3.2"
 __program_name__ = "PyQt Example"
 
 class MainWindow(QMainWindow):
@@ -26,9 +26,9 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
 
         ### Buttons ###
+        buttonLayout = QFormLayout()
         buttonGroup = QGroupBox()
         buttonGroup.setTitle("버튼")
-        buttonLayout = QFormLayout()
         buttonGroup.setLayout(buttonLayout)
 
         # Push Button
@@ -40,13 +40,14 @@ class MainWindow(QMainWindow):
         # Check Box
         self.mainCheckBox = QCheckBox("체크(&K)")
         
-        buttonLayout.addRow("버튼: ", self.mainButton)
-        buttonLayout.addRow("체크 상자: ", self.mainCheckBox)
+        self.AddRows(buttonLayout, (
+                ("버튼: ", self.mainButton),
+                ("체크 상자: ", self.mainCheckBox)))
 
         ### Input Widgets ###
+        inputLayout = QFormLayout()
         inputGroup = QGroupBox()
         inputGroup.setTitle("입력 위젯")
-        inputLayout = QFormLayout()
         inputGroup.setLayout(inputLayout)
         
         # Combo Box
@@ -77,21 +78,24 @@ class MainWindow(QMainWindow):
         self.mainSlider.setValue(0)
         self.mainSlider.setTickPosition(QSlider.TicksBelow)
 
-        inputLayout.addRow("콤보 상자(&C): ", self.mainComboBox)
-        inputLayout.addRow("라인 편집(&I): ", self.mainLineEdit)
-        inputLayout.addRow("스핀 상자(&S): ", self.mainSpinBox)
-        inputLayout.addRow("다이얼(&D): ", self.mainDial)
-        inputLayout.addRow("슬라이더(&L): ", self.mainSlider)
+        self.AddRows(inputLayout, (
+                ("콤보 상자(&C): ", self.mainComboBox),
+                ("라인 편집(&I): ", self.mainLineEdit),
+                ("스핀 상자(&S): ", self.mainSpinBox),
+                ("다이얼(&D): ", self.mainDial),
+                ("슬라이더(&L): ", self.mainSlider)))
 
         ### Display Widgets ###
+        displayLayout = QFormLayout()
         displayGroup = QGroupBox()
         displayGroup.setTitle("표시 위젯")
-        displayLayout = QFormLayout()
         displayGroup.setLayout(displayLayout)
 
+        # Label
         self.mainLabel = QLabel("레이블 내용")
 
-        displayLayout.addRow("레이블: ", self.mainLabel)
+        self.AddRows(displayLayout, (
+                ("레이블: ", self.mainLabel),))
 
         ### Actions ###
         # Simple Dialog Open
@@ -169,91 +173,77 @@ class MainWindow(QMainWindow):
         
         ### Menu Bar ###
         # 대화 상자
-        dialogMenuAction = self.menuBar().addAction("대화 상자(&A)")
-        dialogMenuHelp = "여러 대화 상자 종류들을 포함합니다"
-        dialogMenuAction.setToolTip(dialogMenuHelp)
-        dialogMenuAction.setStatusTip(dialogMenuHelp)
         dialogMenu = QMenu()
+        self.AddActions(dialogMenu, (simpleDialogAction, signalDialogAction,
+            connectDialogAction, None, dumbDialogAction, standardDialogAction,
+            smartDialogAction, liveDialogAction))
+        dialogMenuAction = self.CreateAction("대화 상자(&A)", None, None,
+                "여러 대화 상자 종류들을 포함합니다")
         dialogMenuAction.setMenu(dialogMenu)
-        dialogMenu.addAction(simpleDialogAction)
-        dialogMenu.addAction(signalDialogAction)
-        dialogMenu.addAction(connectDialogAction)
-        dialogMenu.addSeparator()
-        dialogMenu.addAction(dumbDialogAction)
-        dialogMenu.addAction(standardDialogAction)
-        dialogMenu.addAction(smartDialogAction)
-        dialogMenu.addAction(liveDialogAction)
+        self.menuBar().addAction(dialogMenuAction)
 
         # 이미지
-        imageMenuAction = self.menuBar().addAction("이미지(&M)")
-        imageMenuHelp = "이미지를 조절합니다"
-        imageMenuAction.setToolTip(imageMenuHelp)
-        imageMenuAction.setStatusTip(imageMenuHelp)
         imageMenu = QMenu()
+        self.AddActions(imageMenu, (openImageAction, zoomImageAction))
+        imageMenuAction = self.CreateAction("이미지(&M)", None, None,
+                "이미지를 조절합니다")
         imageMenuAction.setMenu(imageMenu)
-        imageMenu.addAction(openImageAction)
-        imageMenu.addAction(zoomImageAction)
+        self.menuBar().addAction(imageMenuAction)
 
         # 도움말
-        aboutMenuAction = self.menuBar().addAction("도움말(&H)")
-        aboutMenuHelp = "도움말 및 정보를 포함합니다"
-        aboutMenuAction.setToolTip(aboutMenuHelp)
-        aboutMenuAction.setStatusTip(aboutMenuHelp)
         aboutMenu = QMenu()
+        self.AddActions(aboutMenu, (helpAboutAction,))
+        aboutMenuAction = self.CreateAction("도움말(&H)", None, None,
+                "도움말 및 정보를 포함합니다")
         aboutMenuAction.setMenu(aboutMenu)
-        aboutMenu.addAction(helpAboutAction)
+        self.menuBar().addAction(aboutMenuAction)
 
         ### Dock Widget ###
         # List Dock Widget
-        listDockWidget = QDockWidget("리스트 Dock", self)
-        listDockWidget.setObjectName("ListDockWidget")
         self.listWidget = QListWidget()
-        listDockWidget.setWidget(self.listWidget)
-        self.addDockWidget(Qt.RightDockWidgetArea, listDockWidget)
-
         self.listWidget.addItems(["리스트 항목 {}".format(k) 
                                     for k in range(1, 5)])
 
-        # Image Label Dock Widget
-        imageLabelDock = QDockWidget("이미지 Dock", self)
-        imageLabelDock.setObjectName("TextBrowserDockWidget")
-        self.imageLabel = QLabel()
-        imageLabelDock.setWidget(self.imageLabel)
-        self.addDockWidget(Qt.BottomDockWidgetArea, imageLabelDock)
+        listDockWidget = QDockWidget("리스트 Dock", self)
+        listDockWidget.setObjectName("ListDockWidget")
+        listDockWidget.setWidget(self.listWidget)
+        self.addDockWidget(Qt.RightDockWidgetArea, listDockWidget)
 
+        # Image Label Dock Widget
+        self.imageZoom = (100, 100)
+        self.sameZoomCheckState = False
+        self.image = QImage(":kubuntuLogoIcon.png")
+
+        self.imageLabel = QLabel()
         self.imageLabel.setMinimumSize(200, 200)
         self.imageLabel.setAlignment(Qt.AlignCenter)
         self.imageLabel.setFrameShape(QFrame.StyledPanel)
-
-        self.image = QImage(":kubuntuLogoIcon.png")
         self.imageLabel.setPixmap(QPixmap.fromImage(self.image))
-        self.imageZoom = (100, 100)
-        self.sameZoomCheckState = False
+
+        imageLabelDock = QDockWidget("이미지 Dock", self)
+        imageLabelDock.setObjectName("TextBrowserDockWidget")
+        imageLabelDock.setWidget(self.imageLabel)
+        self.addDockWidget(Qt.BottomDockWidgetArea, imageLabelDock)
 
         ### Tool Bar ###
         # Dialog Tool Bar
         dialogToolBar = self.addToolBar("Dialog")
         dialogToolBar.setObjectName("DialogToolBar")
-        dialogToolBar.addAction(simpleDialogAction)
-        dialogToolBar.addAction(signalDialogAction)
-        dialogToolBar.addAction(connectDialogAction)
-        dialogToolBar.addSeparator()
-        dialogToolBar.addAction(dumbDialogAction)
-        dialogToolBar.addAction(standardDialogAction)
-        dialogToolBar.addAction(smartDialogAction)
-        dialogToolBar.addAction(liveDialogAction)
+        self.AddActions(dialogToolBar, (simpleDialogAction, signalDialogAction,
+            connectDialogAction, None, standardDialogAction, smartDialogAction,
+            liveDialogAction))
 
         # Group Actoin Tool Bar
         groupActionToolBar = self.addToolBar("GruopAction")
         groupActionToolBar.setObjectName("GroupActionToolBar")
-        groupActionToolBar.addAction(messageAAction)
-        groupActionToolBar.addAction(messageBAction)
-        groupActionToolBar.addAction(messageCAction)
+        self.AddActions(groupActionToolBar, (messageAAction, messageBAction,
+            messageCAction))
 
         ### Status Bar ###
-        statusBar = self.statusBar()
         statusBarLabel = QLabel("상태표시줄")
         statusBarLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Plain)
+        
+        statusBar = self.statusBar()
         statusBar.addPermanentWidget(statusBarLabel)
         statusBar.showMessage("실행 완료", 5000)
         
@@ -274,21 +264,15 @@ class MainWindow(QMainWindow):
         ### Context Menu ###
         # Central Widget
         centralWidget.setContextMenuPolicy(Qt.ActionsContextMenu)
-        centralWidget.addAction(simpleDialogAction)
-        centralWidget.addAction(signalDialogAction)
-        centralWidget.addAction(connectDialogAction)
         contextSeparator = QAction(self)
         contextSeparator.setSeparator(True)
-        centralWidget.addAction(contextSeparator)
-        centralWidget.addAction(dumbDialogAction)
-        centralWidget.addAction(standardDialogAction)
-        centralWidget.addAction(smartDialogAction)
-        centralWidget.addAction(liveDialogAction)
+        self.AddActions(centralWidget, (simpleDialogAction, signalDialogAction,
+            connectDialogAction, contextSeparator, dumbDialogAction,
+            standardDialogAction, smartDialogAction, liveDialogAction))
 
         # Image Label in Dock
         self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
-        self.imageLabel.addAction(openImageAction)
-        self.imageLabel.addAction(zoomImageAction)
+        self.AddActions(self.imageLabel, (openImageAction, zoomImageAction))
 
     ### Method ###
     def CreateAction(self, name, icon=None, shortcut=None, tipHelp=None, 
@@ -307,6 +291,17 @@ class MainWindow(QMainWindow):
             action.setCheckable(True)
 
         return action
+
+    def AddActions(self, target, actions):
+        for action in actions:
+            if action:
+                target.addAction(action)
+            else:
+                target.addSeparator()
+
+    def AddRows(self, layout, rows):
+        for row in rows:
+            layout.addRow(*row)
 
     def DumbCall(self):
         dialog = introDlg.DumbDialog(self)
