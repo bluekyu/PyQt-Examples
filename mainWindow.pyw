@@ -12,6 +12,7 @@
 # Main 윈도우
 
 import sys
+from os.path import dirname, basename
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import simpleSignalConnectDlg as sscDlg
@@ -27,8 +28,7 @@ class MainWindow(QMainWindow):
 
         ### Buttons ###
         buttonLayout = QFormLayout()
-        buttonGroup = QGroupBox()
-        buttonGroup.setTitle("버튼")
+        buttonGroup = QGroupBox("버튼")
         buttonGroup.setLayout(buttonLayout)
 
         # Push Button
@@ -47,8 +47,7 @@ class MainWindow(QMainWindow):
 
         ### Input Widgets ###
         inputLayout = QFormLayout()
-        inputGroup = QGroupBox()
-        inputGroup.setTitle("입력 위젯")
+        inputGroup = QGroupBox("입력 위젯")
         inputGroup.setLayout(inputLayout)
         
         # Combo Box
@@ -88,8 +87,7 @@ class MainWindow(QMainWindow):
 
         ### Display Widgets ###
         displayLayout = QFormLayout()
-        displayGroup = QGroupBox()
-        displayGroup.setTitle("표시 위젯")
+        displayGroup = QGroupBox("표시 위젯")
         displayGroup.setLayout(displayLayout)
 
         # Label
@@ -100,8 +98,7 @@ class MainWindow(QMainWindow):
 
         ### Item Widgets ###
         itemLayout = QFormLayout()
-        itemGroup = QGroupBox()
-        itemGroup.setTitle("표시 위젯")
+        itemGroup = QGroupBox("아이템 위젯")
         itemGroup.setLayout(itemLayout)
 
         # List Widget
@@ -206,7 +203,54 @@ class MainWindow(QMainWindow):
                 "다른 이름으로 텍스트 파일 저장(&A)", 
                 ":saveAsTextFileIcon.png", QKeySequence.SaveAs, 
                 "다른 이름으로 텍스트 파일을 저장합니다.", self.SaveAsTextFile)
+ 
+        ### Dock Widget ###
+        # Image Label Dock Widget
+        self.imageZoom = (100, 100)
+        self.sameZoomCheckState = False
+        self.image = QImage(":kubuntuLogoIcon.png")
+
+        self.imageLabel = QLabel()
+        self.imageLabel.setMinimumSize(200, 200)
+        self.imageLabel.setAlignment(Qt.AlignCenter)
+        self.imageLabel.setFrameShape(QFrame.StyledPanel)
+        self.imageLabel.setPixmap(QPixmap.fromImage(self.image))
+
+        imageLabelDock = QDockWidget("이미지 Dock", self)
+        imageLabelDock.setObjectName("TextBrowserDockWidget")
+        imageLabelDock.setWidget(self.imageLabel)
+        self.addDockWidget(Qt.BottomDockWidgetArea, imageLabelDock)
+
+        # Image Label in Dock Context Menu
+        self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
+        self.AddActions(self.imageLabel, (openImageAction, zoomImageAction))
+
+        # Plain Text Edit
+        self.plainTextEdit = QPlainTextEdit()
+        self.plainTextEdit.setMinimumSize(200, 200)
+        self.plainTextEditChanged = False
+        self.plainTextEditChangedByUser = True
+        self.plainTextEditFilePath = None
+
+        def UserChangePlainTextEdit():
+            if (not self.plainTextEditChanged) and \
+                                            self.plainTextEditChangedByUser:
+                self.plainTextEditChanged = True
+                self.UpdatePlainTextEdit(None)
+
+        self.connect(self.plainTextEdit, SIGNAL("textChanged()"), 
+                                UserChangePlainTextEdit)
         
+        self.plainTextEditDock = QDockWidget("텍스트 에디트 Dock", self)
+        self.plainTextEditDock.setObjectName("PlainTextEditDockWidget")
+        self.plainTextEditDock.setWidget(self.plainTextEdit)
+        self.addDockWidget(Qt.RightDockWidgetArea, self.plainTextEditDock)
+
+        # Plain Test Edit Context Menu
+        self.plainTextEditDock.setContextMenuPolicy(Qt.ActionsContextMenu)
+        self.AddActions(self.plainTextEditDock, (newTextFileAction,
+            openTextFileAction, saveTextFileAction, saveAsTextFileAction))
+       
         ### Menu Bar ###
         # 파일
         fileMenu = QMenu()
@@ -243,36 +287,6 @@ class MainWindow(QMainWindow):
         aboutMenuAction.setMenu(aboutMenu)
         self.menuBar().addAction(aboutMenuAction)
 
-        ### Dock Widget ###
-        # Image Label Dock Widget
-        self.imageZoom = (100, 100)
-        self.sameZoomCheckState = False
-        self.image = QImage(":kubuntuLogoIcon.png")
-
-        self.imageLabel = QLabel()
-        self.imageLabel.setMinimumSize(200, 200)
-        self.imageLabel.setAlignment(Qt.AlignCenter)
-        self.imageLabel.setFrameShape(QFrame.StyledPanel)
-        self.imageLabel.setPixmap(QPixmap.fromImage(self.image))
-
-        imageLabelDock = QDockWidget("이미지 Dock", self)
-        imageLabelDock.setObjectName("TextBrowserDockWidget")
-        imageLabelDock.setWidget(self.imageLabel)
-        self.addDockWidget(Qt.BottomDockWidgetArea, imageLabelDock)
-
-        # Image Label in Dock Context Menu
-        self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
-        self.AddActions(self.imageLabel, (openImageAction, zoomImageAction))
-
-        # Plain Text Edit
-        self.plainTextEdit = QPlainTextEdit()
-        self.plainTextEdit.setMinimumSize(200, 200)
-
-        plainTextEditDock = QDockWidget("텍스트 에디트 Dock", self)
-        plainTextEditDock.setObjectName("PlainTextEditDockWidget")
-        plainTextEditDock.setWidget(self.plainTextEdit)
-        self.addDockWidget(Qt.RightDockWidgetArea, plainTextEditDock)
-
         ### Tool Bar ###
         # Dialog Tool Bar
         dialogToolBar = self.addToolBar("Dialog")
@@ -291,9 +305,9 @@ class MainWindow(QMainWindow):
         statusBarLabel = QLabel("상태표시줄")
         statusBarLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Plain)
         
-        statusBar = self.statusBar()
-        statusBar.addPermanentWidget(statusBarLabel)
-        statusBar.showMessage("실행 완료", 5000)
+        self.statusBar = self.statusBar()
+        self.statusBar.addPermanentWidget(statusBarLabel)
+        self.statusBar.showMessage("실행 완료", 5000)
         
         ### Main ###
         self.liveDialog = None
@@ -347,17 +361,61 @@ class MainWindow(QMainWindow):
         for row in rows:
             layout.addRow(*row)
 
+    def TextFileSaveOk(self):
+        if self.plainTextEditChanged:
+            answer = QMessageBox.question(self, "텍스트 파일 저장 확인",
+                    "텍스트 파일이 저장되지 않았습니다. 저장하시겠습니까?",
+                    QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+            if answer == QMessageBox.Cancel:
+                return False
+            elif answer == QMessageBox.Yes:
+                self.SaveTextFile()
+        return True
+
     def NewTextFile(self):
-        pass
+        if not self.TextFileSaveOk():
+            return
+        self.plainTextEditFilePath = None
+        self.plainTextEditChanged = False
+        self.plainTextEditChangedByUser = False
+        self.plainTextEdit.clear()
+        self.plainTextEditChangedByUser = True
+
+        self.UpdatePlainTextEdit("새 파일이 열림")
 
     def OpenTextFile(self):
-        pass
+        if not self.TextFileSaveOk():
+            return
+        fileDir = dirname(self.plainTextEditFilePath) if \
+                                    self.plainTextEditFilePath else "."
+
+        filePath = QFileDialog.getOpenFileName(self, "텍스트 파일 열기",
+                        fileDir, "텍스트 파일 (*.txt)\n모든 파일 (*.*)")
+
+        if filePath:
+            self.plainTextEditFilePath = filePath
+            self.plainTextEditChanged = False
+            self.plainTextEditChangedByUser = False
+            text = open(filePath, "r").read()
+            self.plainTextEdit.setPlainText(text)
+            self.plainTextEditChangedByUser = True
+            self.UpdatePlainTextEdit("파일 열기 성공")
 
     def SaveTextFile(self):
         pass
 
     def SaveAsTextFile(self):
         pass
+
+    def UpdatePlainTextEdit(self, message):
+        if message:
+            self.statusBar.showMessage(message, 5000)
+
+        fileName = basename(self.plainTextEditFilePath) if \
+                        self.plainTextEditFilePath else "이름 없음"
+        self.plainTextEditDock.setWindowTitle(
+                                "{}[*]".format(fileName))
+        self.plainTextEditDock.setWindowModified(self.plainTextEditChanged)
 
     def DumbCall(self):
         dialog = introDlg.DumbDialog(self)
