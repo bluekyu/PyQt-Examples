@@ -35,7 +35,8 @@ class MainWindow(QMainWindow):
         self.mainButton = QPushButton("버튼(&B)")
         buttonMessageBox = QMessageBox(QMessageBox.Information, "버튼 메시지",
                             "버튼이 클릭 됨", QMessageBox.Ok, self)
-        self.connect(self.mainButton, SIGNAL("clicked()"), buttonMessageBox.open)
+        self.connect(self.mainButton, SIGNAL("clicked()"), 
+                                                    buttonMessageBox.open)
 
         # Check Box
         self.mainCheckBox = QCheckBox("체크(&K)")
@@ -97,6 +98,21 @@ class MainWindow(QMainWindow):
         self.AddRows(displayLayout, (
                 ("레이블: ", self.mainLabel),))
 
+        ### Item Widgets ###
+        itemLayout = QFormLayout()
+        itemGroup = QGroupBox()
+        itemGroup.setTitle("표시 위젯")
+        itemGroup.setLayout(itemLayout)
+
+        # List Widget
+        self.listWidget = QListWidget()
+        self.listWidget.addItems(["리스트 항목 {}".format(k) 
+                                    for k in range(1, 5)])
+        self.listWidget.setMinimumSize(100, 100)
+
+        self.AddRows(itemLayout, (
+                ("리스트 위젯: ", self.listWidget),))
+
         ### Actions ###
         # Simple Dialog Open
         simpleDialogAction = self.CreateAction("단순 대화상자",
@@ -152,9 +168,8 @@ class MainWindow(QMainWindow):
                             self.GroupActionMessage, True, "toggled(bool)")
 
         groupAction = QActionGroup(self)
-        groupAction.addAction(messageAAction)
-        groupAction.addAction(messageBAction)
-        groupAction.addAction(messageCAction)
+        self.AddActions(groupAction, (
+                messageAAction, messageBAction, messageCAction))
 
         # Open Image Action
         openImageAction = self.CreateAction("이미지 열기", ":openImage.png",
@@ -199,16 +214,6 @@ class MainWindow(QMainWindow):
         self.menuBar().addAction(aboutMenuAction)
 
         ### Dock Widget ###
-        # List Dock Widget
-        self.listWidget = QListWidget()
-        self.listWidget.addItems(["리스트 항목 {}".format(k) 
-                                    for k in range(1, 5)])
-
-        listDockWidget = QDockWidget("리스트 Dock", self)
-        listDockWidget.setObjectName("ListDockWidget")
-        listDockWidget.setWidget(self.listWidget)
-        self.addDockWidget(Qt.RightDockWidgetArea, listDockWidget)
-
         # Image Label Dock Widget
         self.imageZoom = (100, 100)
         self.sameZoomCheckState = False
@@ -224,6 +229,19 @@ class MainWindow(QMainWindow):
         imageLabelDock.setObjectName("TextBrowserDockWidget")
         imageLabelDock.setWidget(self.imageLabel)
         self.addDockWidget(Qt.BottomDockWidgetArea, imageLabelDock)
+
+        # Image Label in Dock Context Menu
+        self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
+        self.AddActions(self.imageLabel, (openImageAction, zoomImageAction))
+
+        # Plain Text Edit
+        self.plainTextEdit = QPlainTextEdit()
+        self.plainTextEdit.setMinimumSize(200, 200)
+
+        plainTextEditDock = QDockWidget("텍스트 에디트 Dock", self)
+        plainTextEditDock.setObjectName("PlainTextEditDockWidget")
+        plainTextEditDock.setWidget(self.plainTextEdit)
+        self.addDockWidget(Qt.RightDockWidgetArea, plainTextEditDock)
 
         ### Tool Bar ###
         # Dialog Tool Bar
@@ -254,15 +272,12 @@ class MainWindow(QMainWindow):
         mainLayout.addWidget(buttonGroup)
         mainLayout.addWidget(inputGroup)
         mainLayout.addWidget(displayGroup)
+        mainLayout.addWidget(itemGroup)
 
         centralWidget = QWidget()
         centralWidget.setLayout(mainLayout)
-        self.setCentralWidget(centralWidget)
 
-        self.setWindowTitle("Main Window")
-
-        ### Context Menu ###
-        # Central Widget
+        # Central Widget Context Menu
         centralWidget.setContextMenuPolicy(Qt.ActionsContextMenu)
         contextSeparator = QAction(self)
         contextSeparator.setSeparator(True)
@@ -270,9 +285,8 @@ class MainWindow(QMainWindow):
             connectDialogAction, contextSeparator, dumbDialogAction,
             standardDialogAction, smartDialogAction, liveDialogAction))
 
-        # Image Label in Dock
-        self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
-        self.AddActions(self.imageLabel, (openImageAction, zoomImageAction))
+        self.setCentralWidget(centralWidget)
+        self.setWindowTitle("Main Window")
 
     ### Method ###
     def CreateAction(self, name, icon=None, shortcut=None, tipHelp=None, 
