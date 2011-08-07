@@ -14,5 +14,9 @@
 <file alias="iconA.png">image/iconA.png</file>
 <file alias="iconB.png">image/iconB.png</file>
 <file alias="iconC.png">image/iconC.png</file>
+<file alias="newTextFileIcon.png">image/newTextFileIcon.png</file>
+<file alias="openTextFileIcon.png">image/openTextFileIcon.png</file>
+<file alias="saveTextFileIcon.png">image/saveTextFileIcon.png</file>
+<file alias="saveAsTextFileIcon.png">image/saveAsTextFileIcon.png</file>
 </qresource>
 </RCC>

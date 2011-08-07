@@ -185,8 +185,38 @@ class MainWindow(QMainWindow):
         helpAboutAction = self.CreateAction("{} 정보".format(__program_name__),
                             None, None, "{}에 대한 정보를 보여줍니다.".format(
                             __program_name__), self.HelpAbout)
+
+        # New Text File Action
+        newTextFileAction = self.CreateAction("새 텍스트 파일(&N)", 
+                ":newTextFileIcon.png", QKeySequence.New, 
+                "새 텍스트 파일을 엽니다.", self.NewTextFile)
+
+        # Open Text File Action
+        openTextFileAction = self.CreateAction("텍스트 파일 열기(&O)", 
+                ":openTextFileIcon.png", QKeySequence.Open, 
+                "텍스트 파일을 엽니다.", self.OpenTextFile)
+
+        # Save Text File Action
+        saveTextFileAction = self.CreateAction("텍스트 파일 저장(&S)", 
+                ":saveTextFileIcon.png", QKeySequence.Save, 
+                "텍스트 파일을 저장합니다.", self.SaveTextFile)
+
+        # Save As Text File Action
+        saveAsTextFileAction = self.CreateAction(
+                "다른 이름으로 텍스트 파일 저장(&A)", 
+                ":saveAsTextFileIcon.png", QKeySequence.SaveAs, 
+                "다른 이름으로 텍스트 파일을 저장합니다.", self.SaveAsTextFile)
         
         ### Menu Bar ###
+        # 파일
+        fileMenu = QMenu()
+        self.AddActions(fileMenu, (newTextFileAction, openTextFileAction,
+            saveTextFileAction, saveAsTextFileAction))
+        fileMenuAction = self.CreateAction("파일(&F)", None, None, 
+                "파일의 열기 및 저장 등을 포함합니다")
+        fileMenuAction.setMenu(fileMenu)
+        self.menuBar().addAction(fileMenuAction)
+
         # 대화 상자
         dialogMenu = QMenu()
         self.AddActions(dialogMenu, (simpleDialogAction, signalDialogAction,
@@ -316,6 +346,18 @@ class MainWindow(QMainWindow):
     def AddRows(self, layout, rows):
         for row in rows:
             layout.addRow(*row)
+
+    def NewTextFile(self):
+        pass
+
+    def OpenTextFile(self):
+        pass
+
+    def SaveTextFile(self):
+        pass
+
+    def SaveAsTextFile(self):
+        pass
 
     def DumbCall(self):
         dialog = introDlg.DumbDialog(self)
