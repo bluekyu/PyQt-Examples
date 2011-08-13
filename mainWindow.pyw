@@ -332,6 +332,13 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(centralWidget)
         self.setWindowTitle("Main Window")
 
+        ### Settings Restore ###
+        settings = QSettings()
+        self.recentFiles = settings.value("RecentFiles") or []
+        self.restoreGeometry(settings.value("mainWindow.Geometry",
+                QByteArray()))
+        self.restoreState(settings.value("mainWindow.State", QByteArray()))
+
     ### Method ###
     def CreateAction(self, name, icon=None, shortcut=None, tipHelp=None, 
                             slot=None, checkable=False, signal="triggered()"):
@@ -406,6 +413,15 @@ class MainWindow(QMainWindow):
 
     def SaveAsTextFile(self):
         pass
+
+    def closeEvent(self, event):
+        if self.TextFileSaveOk():
+            settings = QSettings()
+            settings.setValue("RecentFiles", self.recentFiles or [])
+            settings.setValue("mainWindow.Geometry", self.saveGeometry())
+            settings.setValue("mainWindow.State", self.saveState())
+        else:
+            event.ignore()
 
     def UpdatePlainTextEdit(self, message):
         if message:
@@ -577,6 +593,9 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setOrganizationName("bluekyu")
+    app.setOrganizationDomain("bluekyu.me")
+    app.setApplicationName(__program_name__)
     app.setWindowIcon(QIcon(":mainIcon.png"))
     mainWindow = MainWindow()
     mainWindow.show()
