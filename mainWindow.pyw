@@ -252,10 +252,15 @@ class MainWindow(QMainWindow):
             openTextFileAction, saveTextFileAction, saveAsTextFileAction))
        
         ### Menu Bar ###
+        # 최근 파일 목록
+        self.recentFilesMenu = QMenu("최근에 연 파일")
+        self.connect(self.recentFilesMenu, SIGNAL("aboutToShow()"),
+                        self.UpdateRecentFilesMenu)
+
         # 파일
         fileMenu = QMenu()
-        self.AddActions(fileMenu, (newTextFileAction, openTextFileAction,
-            saveTextFileAction, saveAsTextFileAction))
+        self.AddActions(fileMenu, (newTextFileAction, None, openTextFileAction,
+            self.recentFilesMenu, None, saveTextFileAction, saveAsTextFileAction))
         fileMenuAction = self.CreateAction("파일(&F)", None, None, 
                 "파일의 열기 및 저장 등을 포함합니다")
         fileMenuAction.setMenu(fileMenu)
@@ -359,8 +364,10 @@ class MainWindow(QMainWindow):
 
     def AddActions(self, target, actions):
         for action in actions:
-            if action:
+            if isinstance(action, QAction):
                 target.addAction(action)
+            elif isinstance(action, QMenu):
+                target.addMenu(action)
             else:
                 target.addSeparator()
 
@@ -400,12 +407,17 @@ class MainWindow(QMainWindow):
                         fileDir, "텍스트 파일 (*.txt)\n모든 파일 (*.*)")
 
         if filePath:
+            self.LoadTextFile(filePath)
+
+    def LoadTextFile(self, filePath):
+        if filePath:
             self.plainTextEditFilePath = filePath
             self.plainTextEditChanged = False
             self.plainTextEditChangedByUser = False
             text = open(filePath, "r").read()
             self.plainTextEdit.setPlainText(text)
             self.plainTextEditChangedByUser = True
+            self.AddRecentFiles(filePath)
             self.UpdatePlainTextEdit("파일 열기 성공")
 
     def SaveTextFile(self):
@@ -422,6 +434,29 @@ class MainWindow(QMainWindow):
             settings.setValue("mainWindow.State", self.saveState())
         else:
             event.ignore()
+
+    def AddRecentFiles(self, filePath):
+        if filePath is None:
+            return
+        if filePath not in self.recentFiles:
+            self.recentFiles.insert(0, filePath)
+            if len(self.recentFiles) > 9:
+                self.recentFiles.pop()
+
+    def UpdateRecentFilesMenu(self):
+        self.recentFilesMenu.clear()
+        recentFiles = []
+        for filePath in self.recentFiles:
+            if filePath != self.plainTextEditFilePath and \
+                    QFile.exists(filePath):
+                recentFiles.append(filePath)
+
+        for i, filePath in enumerate(recentFiles):
+            action = QAction("&{} {}".format(i+1, filePath), self)
+            action.setData(filePath)
+            self.connect(action, SIGNAL("triggered()"), 
+                            lambda: self.LoadTextFile(filePath))
+            self.recentFilesMenu.addAction(action)
 
     def UpdatePlainTextEdit(self, message):
         if message:
