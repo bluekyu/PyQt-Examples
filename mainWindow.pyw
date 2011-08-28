@@ -13,6 +13,7 @@
 
 import sys
 from os.path import dirname, basename
+from functools import partial
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import simpleSignalConnectDlg as sscDlg
@@ -313,7 +314,7 @@ class MainWindow(QMainWindow):
         self.statusBar = self.statusBar()
         self.statusBar.addPermanentWidget(statusBarLabel)
         self.statusBar.showMessage("실행 완료", 5000)
-        
+
         ### Main ###
         self.liveDialog = None
 
@@ -455,7 +456,7 @@ class MainWindow(QMainWindow):
             action = QAction("&{} {}".format(i+1, filePath), self)
             action.setData(filePath)
             self.connect(action, SIGNAL("triggered()"), 
-                            lambda: self.LoadTextFile(filePath))
+                            partial(self.LoadTextFile, filePath))
             self.recentFilesMenu.addAction(action)
 
     def UpdatePlainTextEdit(self, message):
