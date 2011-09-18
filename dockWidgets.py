@@ -24,8 +24,10 @@ __author__ = "YoungUk Kim"
 __date__ = "09.18.2011"
 
 class TextEdit(QPlainTextEdit):
+    """텍스트 에디터 클래스"""
 
     titleLabel = None
+    statusBar = None
     isChanged = False
     isChangedByUser = True
     filePath = None
@@ -33,6 +35,11 @@ class TextEdit(QPlainTextEdit):
     actions = []
 
     def __init__(self, parent=None):
+        """객체 초기화
+
+        인자: parent - 부모 윈도우
+        리턴: 없음"""
+
         super().__init__(parent)
 
         self.setMinimumSize(200, 200)
@@ -77,9 +84,9 @@ class TextEdit(QPlainTextEdit):
 
         if (not self.isChanged) and self.isChangedByUser:
             self.isChanged = True
-            self.UpdateTitleLabel()
+            self.UpdateInfo(None)
 
-    def UpdateTitleLabel(self):
+    def UpdateInfo(self, message):
         """텍스트 에디터를 수정할 때 정보들을 갱신함.
         
         인자: 없음 
@@ -90,6 +97,8 @@ class TextEdit(QPlainTextEdit):
             self.titleLabel.setText("{} *".format(fileName))
         else:
             self.titleLabel.setText("{}".format(fileName))
+        if self.statusBar is not None:
+            self.statusBar.showMessage(message, 5000)
 
     def TextFileSaveOk(self):
         """텍스트 파일을 저장할 것인지 확인하는 메소드.
@@ -121,7 +130,7 @@ class TextEdit(QPlainTextEdit):
         self.clear()
         self.isChangedByUser = True
 
-        self.UpdateTitleLabel()
+        self.UpdateInfo("새 텍스트 파일 생성")
 
     def OpenTextFile(self):
         """텍스트 파일을 열음.
@@ -157,7 +166,7 @@ class TextEdit(QPlainTextEdit):
             self.setPlainText(text)
             self.isChangedByUser = True
             self.AddRecentFiles(filePath)
-            self.UpdateTitleLabel()
+            self.UpdateInfo("파일 열기 완료")
 
     def SaveTextFile(self):
         """텍스트 파일을 저장함.
@@ -173,7 +182,7 @@ class TextEdit(QPlainTextEdit):
             textFile = open(self.filePath, "w")
             textFile.write(self.toPlainText())
             self.isChanged = False
-            self.UpdateTitleLabel()
+            self.UpdateInfo("파일 저장 완료")
 
     def SaveAsTextFile(self):
         """텍스트 파일을 다른 이름으로 저장함.

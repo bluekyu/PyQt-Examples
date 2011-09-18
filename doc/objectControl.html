@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module objectControl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>objectControl</strong></big></big> (version 3.4.1, 09.18.2011)</font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/hda2/Programming/PyQt4/MyCode/Tutorial/objectControl.py">/home/hda2/Programming/PyQt4/MyCode/Tutorial/objectControl.py</a></font></td></tr></table>
+    <p><tt>Copyright&nbsp;(C)&nbsp;2011년&nbsp;bluekyu&nbsp;(<a href="http://www.bluekyu.me/">http://www.bluekyu.me/</a>)<br>
+이&nbsp;프로그램은&nbsp;자유&nbsp;소프트웨어입니다.&nbsp;소프트웨어의&nbsp;피양도자는&nbsp;자유&nbsp;소프트웨어<br>
+재단이&nbsp;공표한&nbsp;GNU&nbsp;일반&nbsp;공중&nbsp;사용&nbsp;허가서&nbsp;2판&nbsp;또는&nbsp;그&nbsp;이후&nbsp;판을&nbsp;임의로<br>
+선택해서,&nbsp;그&nbsp;규정에&nbsp;따라&nbsp;프로그램을&nbsp;개작하거나&nbsp;재배포할&nbsp;수&nbsp;있습니다.<br>
+이&nbsp;프로그램은&nbsp;유용하게&nbsp;사용될&nbsp;수&nbsp;있으리라는&nbsp;희망에서&nbsp;배포되고&nbsp;있지만,<br>
+특정한&nbsp;목적에&nbsp;맞는&nbsp;적합성&nbsp;여부나&nbsp;판매용으로&nbsp;사용할&nbsp;수&nbsp;있으리라는&nbsp;묵시적인<br>
+보증을&nbsp;포함한&nbsp;어떠한&nbsp;형태의&nbsp;보증도&nbsp;제공하지&nbsp;않습니다.&nbsp;보다&nbsp;자세한&nbsp;사항에<br>
+대해서는&nbsp;GNU&nbsp;일반&nbsp;공중&nbsp;사용&nbsp;허가서를&nbsp;참고하시기&nbsp;바랍니다.<br>
+&nbsp;<br>
+객체들에서&nbsp;공통적으로&nbsp;쓰이는&nbsp;유용한&nbsp;함수들을&nbsp;모아둔&nbsp;것</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-AddActions"><strong>AddActions</strong></a>(target, actions)</dt><dd><tt>액션,&nbsp;메뉴&nbsp;또는&nbsp;분리바를&nbsp;정해진&nbsp;위치에&nbsp;추가하는&nbsp;메소드.<br>
+&nbsp;<br>
+인자:&nbsp;target&nbsp;-&nbsp;액션을&nbsp;추가할&nbsp;객체.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;actions&nbsp;-&nbsp;(QAction&nbsp;|&nbsp;QMenu&nbsp;|&nbsp;None,&nbsp;...)&nbsp;형식<br>
+리턴:&nbsp;없음</tt></dd></dl>
+ <dl><dt><a name="-AddRows"><strong>AddRows</strong></a>(layout, rows)</dt><dd><tt>폼&nbsp;레이아웃의&nbsp;행에&nbsp;객체를&nbsp;추가함.<br>
+&nbsp;<br>
+인자:&nbsp;layout&nbsp;-&nbsp;폼&nbsp;레이아웃<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rows&nbsp;-&nbsp;((label,&nbsp;field&nbsp;|&nbsp;label&nbsp;|&nbsp;field),&nbsp;...)&nbsp;형식<br>
+리턴:&nbsp;없음</tt></dd></dl>
+ <dl><dt><a name="-CreateAction"><strong>CreateAction</strong></a>(self, name, icon<font color="#909090">=None</font>, shortcut<font color="#909090">=None</font>, tipHelp<font color="#909090">=None</font>, slot<font color="#909090">=None</font>, checkable<font color="#909090">=False</font>, signal<font color="#909090">='triggered()'</font>)</dt><dd><tt>액션을&nbsp;설정하고&nbsp;생성하는&nbsp;메소드.<br>
+&nbsp;<br>
+인자:&nbsp;name&nbsp;-&nbsp;액션&nbsp;이름<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;icon&nbsp;-&nbsp;액션의&nbsp;아이콘<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;shortcut&nbsp;-&nbsp;단축키<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tipHelp&nbsp;-&nbsp;툴팁과&nbsp;상태표시줄&nbsp;팁에&nbsp;들어갈&nbsp;도움말<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;slot&nbsp;-&nbsp;액션에&nbsp;connect를&nbsp;추가할&nbsp;때,&nbsp;추가할&nbsp;slot<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;checkable&nbsp;-&nbsp;선택&nbsp;가능&nbsp;여부<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;signal&nbsp;-&nbsp;connect에서&nbsp;작동할&nbsp;시그널<br>
+리턴:&nbsp;action&nbsp;객체</tt></dd></dl>
+ <dl><dt><a name="-QT_TRANSLATE_NOOP"><strong>QT_TRANSLATE_NOOP</strong></a>(...)</dt><dd><tt><a href="#-QT_TRANSLATE_NOOP">QT_TRANSLATE_NOOP</a>(str,&nbsp;str)&nbsp;-&gt;&nbsp;str</tt></dd></dl>
+ <dl><dt><a name="-QT_TR_NOOP"><strong>QT_TR_NOOP</strong></a>(...)</dt><dd><tt><a href="#-QT_TR_NOOP">QT_TR_NOOP</a>(str)&nbsp;-&gt;&nbsp;str</tt></dd></dl>
+ <dl><dt><a name="-QT_TR_NOOP_UTF8"><strong>QT_TR_NOOP_UTF8</strong></a>(...)</dt><dd><tt><a href="#-QT_TR_NOOP_UTF8">QT_TR_NOOP_UTF8</a>(str)&nbsp;-&gt;&nbsp;str</tt></dd></dl>
+ <dl><dt><a name="-Q_ARG"><strong>Q_ARG</strong></a>(...)</dt><dd><tt><a href="#-Q_ARG">Q_ARG</a>(object,&nbsp;object)&nbsp;-&gt;&nbsp;QGenericArgument</tt></dd></dl>
+ <dl><dt><a name="-Q_ENUMS"><strong>Q_ENUMS</strong></a>(...)</dt><dd><tt><a href="#-Q_ENUMS">Q_ENUMS</a>(...)</tt></dd></dl>
+ <dl><dt><a name="-Q_FLAGS"><strong>Q_FLAGS</strong></a>(...)</dt><dd><tt><a href="#-Q_FLAGS">Q_FLAGS</a>(...)</tt></dd></dl>
+ <dl><dt><a name="-Q_RETURN_ARG"><strong>Q_RETURN_ARG</strong></a>(...)</dt><dd><tt><a href="#-Q_RETURN_ARG">Q_RETURN_ARG</a>(object)&nbsp;-&gt;&nbsp;QGenericReturnArgument</tt></dd></dl>
+ <dl><dt><a name="-SIGNAL"><strong>SIGNAL</strong></a>(...)</dt><dd><tt><a href="#-SIGNAL">SIGNAL</a>(str)&nbsp;-&gt;&nbsp;str</tt></dd></dl>
+ <dl><dt><a name="-SLOT"><strong>SLOT</strong></a>(...)</dt><dd><tt><a href="#-SLOT">SLOT</a>(str)&nbsp;-&gt;&nbsp;str</tt></dd></dl>
+ <dl><dt><a name="-bin_"><strong>bin_</strong></a>(...)</dt><dd><tt><a href="#-bin_">bin_</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-bom"><strong>bom</strong></a>(...)</dt><dd><tt><a href="#-bom">bom</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-center"><strong>center</strong></a>(...)</dt><dd><tt><a href="#-center">center</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-dec"><strong>dec</strong></a>(...)</dt><dd><tt><a href="#-dec">dec</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-endl"><strong>endl</strong></a>(...)</dt><dd><tt><a href="#-endl">endl</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-fixed"><strong>fixed</strong></a>(...)</dt><dd><tt><a href="#-fixed">fixed</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-flush"><strong>flush</strong></a>(...)</dt><dd><tt><a href="#-flush">flush</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-forcepoint"><strong>forcepoint</strong></a>(...)</dt><dd><tt><a href="#-forcepoint">forcepoint</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-forcesign"><strong>forcesign</strong></a>(...)</dt><dd><tt><a href="#-forcesign">forcesign</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-hex_"><strong>hex_</strong></a>(...)</dt><dd><tt><a href="#-hex_">hex_</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-left"><strong>left</strong></a>(...)</dt><dd><tt><a href="#-left">left</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-lowercasebase"><strong>lowercasebase</strong></a>(...)</dt><dd><tt><a href="#-lowercasebase">lowercasebase</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-lowercasedigits"><strong>lowercasedigits</strong></a>(...)</dt><dd><tt><a href="#-lowercasedigits">lowercasedigits</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-noforcepoint"><strong>noforcepoint</strong></a>(...)</dt><dd><tt><a href="#-noforcepoint">noforcepoint</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-noforcesign"><strong>noforcesign</strong></a>(...)</dt><dd><tt><a href="#-noforcesign">noforcesign</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-noshowbase"><strong>noshowbase</strong></a>(...)</dt><dd><tt><a href="#-noshowbase">noshowbase</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-oct_"><strong>oct_</strong></a>(...)</dt><dd><tt><a href="#-oct_">oct_</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-pyqtRemoveInputHook"><strong>pyqtRemoveInputHook</strong></a>(...)</dt><dd><tt><a href="#-pyqtRemoveInputHook">pyqtRemoveInputHook</a>()</tt></dd></dl>
+ <dl><dt><a name="-pyqtRestoreInputHook"><strong>pyqtRestoreInputHook</strong></a>(...)</dt><dd><tt><a href="#-pyqtRestoreInputHook">pyqtRestoreInputHook</a>()</tt></dd></dl>
+ <dl><dt><a name="-pyqtSignature"><strong>pyqtSignature</strong></a>(...)</dt><dd><tt>@<a href="#-pyqtSignature">pyqtSignature</a>(str&nbsp;signature,&nbsp;&nbsp;str&nbsp;result=None)<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;deprecated,&nbsp;use&nbsp;<a href="#-pyqtSlot">pyqtSlot</a>()&nbsp;instead.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;a&nbsp;decorator&nbsp;applied&nbsp;to&nbsp;Python&nbsp;methods&nbsp;of&nbsp;a&nbsp;QObject&nbsp;that&nbsp;marks&nbsp;them<br>
+as&nbsp;Qt&nbsp;slots.<br>
+signature&nbsp;is&nbsp;a&nbsp;string&nbsp;specifying&nbsp;the&nbsp;C++&nbsp;signature&nbsp;of&nbsp;the&nbsp;slot.<br>
+result&nbsp;is&nbsp;type&nbsp;of&nbsp;the&nbsp;value&nbsp;returned&nbsp;by&nbsp;the&nbsp;slot.</tt></dd></dl>
+ <dl><dt><a name="-pyqtSlot"><strong>pyqtSlot</strong></a>(...)</dt><dd><tt>@<a href="#-pyqtSlot">pyqtSlot</a>(*types,&nbsp;str&nbsp;name=None,&nbsp;str&nbsp;result=None)<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;a&nbsp;decorator&nbsp;applied&nbsp;to&nbsp;Python&nbsp;methods&nbsp;of&nbsp;a&nbsp;QObject&nbsp;that&nbsp;marks&nbsp;them<br>
+as&nbsp;Qt&nbsp;slots.<br>
+The&nbsp;non-keyword&nbsp;arguments&nbsp;are&nbsp;the&nbsp;types&nbsp;of&nbsp;the&nbsp;slot&nbsp;arguments&nbsp;and&nbsp;each&nbsp;may<br>
+be&nbsp;a&nbsp;Python&nbsp;type&nbsp;object&nbsp;or&nbsp;a&nbsp;string&nbsp;specifying&nbsp;a&nbsp;C++&nbsp;type.<br>
+name&nbsp;is&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;slot&nbsp;and&nbsp;defaults&nbsp;to&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;method.<br>
+result&nbsp;is&nbsp;type&nbsp;of&nbsp;the&nbsp;value&nbsp;returned&nbsp;by&nbsp;the&nbsp;slot.</tt></dd></dl>
+ <dl><dt><a name="-qAbs"><strong>qAbs</strong></a>(...)</dt><dd><tt><a href="#-qAbs">qAbs</a>(float)&nbsp;-&gt;&nbsp;float</tt></dd></dl>
+ <dl><dt><a name="-qAddPostRoutine"><strong>qAddPostRoutine</strong></a>(...)</dt><dd><tt><a href="#-qAddPostRoutine">qAddPostRoutine</a>(callable)</tt></dd></dl>
+ <dl><dt><a name="-qAlpha"><strong>qAlpha</strong></a>(...)</dt><dd><tt><a href="#-qAlpha">qAlpha</a>(int)&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+ <dl><dt><a name="-qBlue"><strong>qBlue</strong></a>(...)</dt><dd><tt><a href="#-qBlue">qBlue</a>(int)&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+ <dl><dt><a name="-qChecksum"><strong>qChecksum</strong></a>(...)</dt><dd><tt><a href="#-qChecksum">qChecksum</a>(str)&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+ <dl><dt><a name="-qCompress"><strong>qCompress</strong></a>(...)</dt><dd><tt><a href="#-qCompress">qCompress</a>(QByteArray,&nbsp;int&nbsp;compressionLevel=-1)&nbsp;-&gt;&nbsp;QByteArray</tt></dd></dl>
+ <dl><dt><a name="-qCritical"><strong>qCritical</strong></a>(...)</dt><dd><tt><a href="#-qCritical">qCritical</a>(str)</tt></dd></dl>
+ <dl><dt><a name="-qDebug"><strong>qDebug</strong></a>(...)</dt><dd><tt><a href="#-qDebug">qDebug</a>(str)</tt></dd></dl>
+ <dl><dt><a name="-qDrawBorderPixmap"><strong>qDrawBorderPixmap</strong></a>(...)</dt><dd><tt><a href="#-qDrawBorderPixmap">qDrawBorderPixmap</a>(QPainter,&nbsp;QRect,&nbsp;QMargins,&nbsp;QPixmap)</tt></dd></dl>
+ <dl><dt><a name="-qDrawPlainRect"><strong>qDrawPlainRect</strong></a>(...)</dt><dd><tt><a href="#-qDrawPlainRect">qDrawPlainRect</a>(QPainter,&nbsp;int,&nbsp;int,&nbsp;int,&nbsp;int,&nbsp;QColor,&nbsp;int&nbsp;lineWidth=1,&nbsp;QBrush&nbsp;fill=None)<br>
+<a href="#-qDrawPlainRect">qDrawPlainRect</a>(QPainter,&nbsp;QRect,&nbsp;QColor,&nbsp;int&nbsp;lineWidth=1,&nbsp;QBrush&nbsp;fill=None)</tt></dd></dl>
+ <dl><dt><a name="-qDrawShadeLine"><strong>qDrawShadeLine</strong></a>(...)</dt><dd><tt><a href="#-qDrawShadeLine">qDrawShadeLine</a>(QPainter,&nbsp;int,&nbsp;int,&nbsp;int,&nbsp;int,&nbsp;QPalette,&nbsp;bool&nbsp;sunken=True,&nbsp;int&nbsp;lineWidth=1,&nbsp;int&nbsp;midLineWidth=0)<br>
+<a href="#-qDrawShadeLine">qDrawShadeLine</a>(QPainter,&nbsp;QPoint,&nbsp;QPoint,&nbsp;QPalette,&nbsp;bool&nbsp;sunken=True,&nbsp;int&nbsp;lineWidth=1,&nbsp;int&nbsp;midLineWidth=0)</tt></dd></dl>
+ <dl><dt><a name="-qDrawShadePanel"><strong>qDrawShadePanel</strong></a>(...)</dt><dd><tt><a href="#-qDrawShadePanel">qDrawShadePanel</a>(QPainter,&nbsp;int,&nbsp;int,&nbsp;int,&nbsp;int,&nbsp;QPalette,&nbsp;bool&nbsp;sunken=False,&nbsp;int&nbsp;lineWidth=1,&nbsp;QBrush&nbsp;fill=None)<br>
+<a href="#-qDrawShadePanel">qDrawShadePanel</a>(QPainter,&nbsp;QRect,&nbsp;QPalette,&nbsp;bool&nbsp;sunken=False,&nbsp;int&nbsp;lineWidth=1,&nbsp;QBrush&nbsp;fill=None)</tt></dd></dl>
+ <dl><dt><a name="-qDrawShadeRect"><strong>qDrawShadeRect</strong></a>(...)</dt><dd><tt><a href="#-qDrawShadeRect">qDrawShadeRect</a>(QPainter,&nbsp;int,&nbsp;int,&nbsp;int,&nbsp;int,&nbsp;QPalette,&nbsp;bool&nbsp;sunken=False,&nbsp;int&nbsp;lineWidth=1,&nbsp;int&nbsp;midLineWidth=0,&nbsp;QBrush&nbsp;fill=None)<br>
+<a href="#-qDrawShadeRect">qDrawShadeRect</a>(QPainter,&nbsp;QRect,&nbsp;QPalette,&nbsp;bool&nbsp;sunken=False,&nbsp;int&nbsp;lineWidth=1,&nbsp;int&nbsp;midLineWidth=0,&nbsp;QBrush&nbsp;fill=None)</tt></dd></dl>
+ <dl><dt><a name="-qDrawWinButton"><strong>qDrawWinButton</strong></a>(...)</dt><dd><tt><a href="#-qDrawWinButton">qDrawWinButton</a>(QPainter,&nbsp;int,&nbsp;int,&nbsp;int,&nbsp;int,&nbsp;QPalette,&nbsp;bool&nbsp;sunken=False,&nbsp;QBrush&nbsp;fill=None)<br>
+<a href="#-qDrawWinButton">qDrawWinButton</a>(QPainter,&nbsp;QRect,&nbsp;QPalette,&nbsp;bool&nbsp;sunken=False,&nbsp;QBrush&nbsp;fill=None)</tt></dd></dl>
+ <dl><dt><a name="-qDrawWinPanel"><strong>qDrawWinPanel</strong></a>(...)</dt><dd><tt><a href="#-qDrawWinPanel">qDrawWinPanel</a>(QPainter,&nbsp;int,&nbsp;int,&nbsp;int,&nbsp;int,&nbsp;QPalette,&nbsp;bool&nbsp;sunken=False,&nbsp;QBrush&nbsp;fill=None)<br>
+<a href="#-qDrawWinPanel">qDrawWinPanel</a>(QPainter,&nbsp;QRect,&nbsp;QPalette,&nbsp;bool&nbsp;sunken=False,&nbsp;QBrush&nbsp;fill=None)</tt></dd></dl>
+ <dl><dt><a name="-qErrnoWarning"><strong>qErrnoWarning</strong></a>(...)</dt><dd><tt><a href="#-qErrnoWarning">qErrnoWarning</a>(int,&nbsp;str)<br>
+<a href="#-qErrnoWarning">qErrnoWarning</a>(str)</tt></dd></dl>
+ <dl><dt><a name="-qFatal"><strong>qFatal</strong></a>(...)</dt><dd><tt><a href="#-qFatal">qFatal</a>(str)</tt></dd></dl>
+ <dl><dt><a name="-qFuzzyCompare"><strong>qFuzzyCompare</strong></a>(...)</dt><dd><tt><a href="#-qFuzzyCompare">qFuzzyCompare</a>(QMatrix,&nbsp;QMatrix)&nbsp;-&gt;&nbsp;bool<br>
+<a href="#-qFuzzyCompare">qFuzzyCompare</a>(QMatrix4x4,&nbsp;QMatrix4x4)&nbsp;-&gt;&nbsp;bool<br>
+<a href="#-qFuzzyCompare">qFuzzyCompare</a>(QQuaternion,&nbsp;QQuaternion)&nbsp;-&gt;&nbsp;bool<br>
+<a href="#-qFuzzyCompare">qFuzzyCompare</a>(QTransform,&nbsp;QTransform)&nbsp;-&gt;&nbsp;bool<br>
+<a href="#-qFuzzyCompare">qFuzzyCompare</a>(QVector2D,&nbsp;QVector2D)&nbsp;-&gt;&nbsp;bool<br>
+<a href="#-qFuzzyCompare">qFuzzyCompare</a>(QVector3D,&nbsp;QVector3D)&nbsp;-&gt;&nbsp;bool<br>
+<a href="#-qFuzzyCompare">qFuzzyCompare</a>(QVector4D,&nbsp;QVector4D)&nbsp;-&gt;&nbsp;bool</tt></dd></dl>
+ <dl><dt><a name="-qGray"><strong>qGray</strong></a>(...)</dt><dd><tt><a href="#-qGray">qGray</a>(int,&nbsp;int,&nbsp;int)&nbsp;-&gt;&nbsp;int<br>
+<a href="#-qGray">qGray</a>(int)&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+ <dl><dt><a name="-qGreen"><strong>qGreen</strong></a>(...)</dt><dd><tt><a href="#-qGreen">qGreen</a>(int)&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+ <dl><dt><a name="-qInf"><strong>qInf</strong></a>(...)</dt><dd><tt><a href="#-qInf">qInf</a>()&nbsp;-&gt;&nbsp;float</tt></dd></dl>
+ <dl><dt><a name="-qInstallMsgHandler"><strong>qInstallMsgHandler</strong></a>(...)</dt><dd><tt><a href="#-qInstallMsgHandler">qInstallMsgHandler</a>(callable)&nbsp;-&gt;&nbsp;callable</tt></dd></dl>
+ <dl><dt><a name="-qIsFinite"><strong>qIsFinite</strong></a>(...)</dt><dd><tt><a href="#-qIsFinite">qIsFinite</a>(float)&nbsp;-&gt;&nbsp;bool</tt></dd></dl>
+ <dl><dt><a name="-qIsGray"><strong>qIsGray</strong></a>(...)</dt><dd><tt><a href="#-qIsGray">qIsGray</a>(int)&nbsp;-&gt;&nbsp;bool</tt></dd></dl>
+ <dl><dt><a name="-qIsInf"><strong>qIsInf</strong></a>(...)</dt><dd><tt><a href="#-qIsInf">qIsInf</a>(float)&nbsp;-&gt;&nbsp;bool</tt></dd></dl>
+ <dl><dt><a name="-qIsNaN"><strong>qIsNaN</strong></a>(...)</dt><dd><tt><a href="#-qIsNaN">qIsNaN</a>(float)&nbsp;-&gt;&nbsp;bool</tt></dd></dl>
+ <dl><dt><a name="-qIsNull"><strong>qIsNull</strong></a>(...)</dt><dd><tt><a href="#-qIsNull">qIsNull</a>(float)&nbsp;-&gt;&nbsp;bool</tt></dd></dl>
+ <dl><dt><a name="-qQNaN"><strong>qQNaN</strong></a>(...)</dt><dd><tt><a href="#-qQNaN">qQNaN</a>()&nbsp;-&gt;&nbsp;float</tt></dd></dl>
+ <dl><dt><a name="-qRed"><strong>qRed</strong></a>(...)</dt><dd><tt><a href="#-qRed">qRed</a>(int)&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+ <dl><dt><a name="-qRegisterResourceData"><strong>qRegisterResourceData</strong></a>(...)</dt><dd><tt><a href="#-qRegisterResourceData">qRegisterResourceData</a>(int,&nbsp;str,&nbsp;str,&nbsp;str)&nbsp;-&gt;&nbsp;bool</tt></dd></dl>
+ <dl><dt><a name="-qRemovePostRoutine"><strong>qRemovePostRoutine</strong></a>(...)</dt><dd><tt><a href="#-qRemovePostRoutine">qRemovePostRoutine</a>(callable)</tt></dd></dl>
+ <dl><dt><a name="-qRgb"><strong>qRgb</strong></a>(...)</dt><dd><tt><a href="#-qRgb">qRgb</a>(int,&nbsp;int,&nbsp;int)&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+ <dl><dt><a name="-qRgba"><strong>qRgba</strong></a>(...)</dt><dd><tt><a href="#-qRgba">qRgba</a>(int,&nbsp;int,&nbsp;int,&nbsp;int)&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+ <dl><dt><a name="-qRound"><strong>qRound</strong></a>(...)</dt><dd><tt><a href="#-qRound">qRound</a>(float)&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+ <dl><dt><a name="-qRound64"><strong>qRound64</strong></a>(...)</dt><dd><tt><a href="#-qRound64">qRound64</a>(float)&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+ <dl><dt><a name="-qSNaN"><strong>qSNaN</strong></a>(...)</dt><dd><tt><a href="#-qSNaN">qSNaN</a>()&nbsp;-&gt;&nbsp;float</tt></dd></dl>
+ <dl><dt><a name="-qSetFieldWidth"><strong>qSetFieldWidth</strong></a>(...)</dt><dd><tt><a href="#-qSetFieldWidth">qSetFieldWidth</a>(int)&nbsp;-&gt;&nbsp;QTextStreamManipulator</tt></dd></dl>
+ <dl><dt><a name="-qSetPadChar"><strong>qSetPadChar</strong></a>(...)</dt><dd><tt><a href="#-qSetPadChar">qSetPadChar</a>(str)&nbsp;-&gt;&nbsp;QTextStreamManipulator</tt></dd></dl>
+ <dl><dt><a name="-qSetRealNumberPrecision"><strong>qSetRealNumberPrecision</strong></a>(...)</dt><dd><tt><a href="#-qSetRealNumberPrecision">qSetRealNumberPrecision</a>(int)&nbsp;-&gt;&nbsp;QTextStreamManipulator</tt></dd></dl>
+ <dl><dt><a name="-qSharedBuild"><strong>qSharedBuild</strong></a>(...)</dt><dd><tt><a href="#-qSharedBuild">qSharedBuild</a>()&nbsp;-&gt;&nbsp;bool</tt></dd></dl>
+ <dl><dt><a name="-qSwap"><strong>qSwap</strong></a>(...)</dt><dd><tt><a href="#-qSwap">qSwap</a>(QBitmap,&nbsp;QBitmap)<br>
+<a href="#-qSwap">qSwap</a>(QBrush,&nbsp;QBrush)<br>
+<a href="#-qSwap">qSwap</a>(QIcon,&nbsp;QIcon)<br>
+<a href="#-qSwap">qSwap</a>(QImage,&nbsp;QImage)<br>
+<a href="#-qSwap">qSwap</a>(QKeySequence,&nbsp;QKeySequence)<br>
+<a href="#-qSwap">qSwap</a>(QPen,&nbsp;QPen)<br>
+<a href="#-qSwap">qSwap</a>(QPicture,&nbsp;QPicture)<br>
+<a href="#-qSwap">qSwap</a>(QPixmap,&nbsp;QPixmap)</tt></dd></dl>
+ <dl><dt><a name="-qUncompress"><strong>qUncompress</strong></a>(...)</dt><dd><tt><a href="#-qUncompress">qUncompress</a>(QByteArray)&nbsp;-&gt;&nbsp;QByteArray</tt></dd></dl>
+ <dl><dt><a name="-qUnregisterResourceData"><strong>qUnregisterResourceData</strong></a>(...)</dt><dd><tt><a href="#-qUnregisterResourceData">qUnregisterResourceData</a>(int,&nbsp;str,&nbsp;str,&nbsp;str)&nbsp;-&gt;&nbsp;bool</tt></dd></dl>
+ <dl><dt><a name="-qVersion"><strong>qVersion</strong></a>(...)</dt><dd><tt><a href="#-qVersion">qVersion</a>()&nbsp;-&gt;&nbsp;str</tt></dd></dl>
+ <dl><dt><a name="-qWarning"><strong>qWarning</strong></a>(...)</dt><dd><tt><a href="#-qWarning">qWarning</a>(str)</tt></dd></dl>
+ <dl><dt><a name="-qrand"><strong>qrand</strong></a>(...)</dt><dd><tt><a href="#-qrand">qrand</a>()&nbsp;-&gt;&nbsp;int</tt></dd></dl>
+ <dl><dt><a name="-qsrand"><strong>qsrand</strong></a>(...)</dt><dd><tt><a href="#-qsrand">qsrand</a>(int)</tt></dd></dl>
+ <dl><dt><a name="-qt_x11_wait_for_window_manager"><strong>qt_x11_wait_for_window_manager</strong></a>(...)</dt><dd><tt><a href="#-qt_x11_wait_for_window_manager">qt_x11_wait_for_window_manager</a>(QWidget)</tt></dd></dl>
+ <dl><dt><a name="-reset"><strong>reset</strong></a>(...)</dt><dd><tt><a href="#-reset">reset</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-right"><strong>right</strong></a>(...)</dt><dd><tt><a href="#-right">right</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-scientific"><strong>scientific</strong></a>(...)</dt><dd><tt><a href="#-scientific">scientific</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-showbase"><strong>showbase</strong></a>(...)</dt><dd><tt><a href="#-showbase">showbase</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-uppercasebase"><strong>uppercasebase</strong></a>(...)</dt><dd><tt><a href="#-uppercasebase">uppercasebase</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-uppercasedigits"><strong>uppercasedigits</strong></a>(...)</dt><dd><tt><a href="#-uppercasedigits">uppercasedigits</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+ <dl><dt><a name="-ws"><strong>ws</strong></a>(...)</dt><dd><tt><a href="#-ws">ws</a>(QTextStream)&nbsp;-&gt;&nbsp;QTextStream</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>PYQT_VERSION</strong> = 264194<br>
+<strong>PYQT_VERSION_STR</strong> = '4.8.2'<br>
+<strong>QT_VERSION</strong> = 263938<br>
+<strong>QT_VERSION_STR</strong> = '4.7.2'<br>
+<strong>QtCriticalMsg</strong> = 2<br>
+<strong>QtDebugMsg</strong> = 0<br>
+<strong>QtFatalMsg</strong> = 3<br>
+<strong>QtSystemMsg</strong> = 2<br>
+<strong>QtWarningMsg</strong> = 1<br>
+<strong>qApp</strong> = &lt;PyQt4.QtGui.QApplication object&gt;</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#7799ee">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Author</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#7799ee"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">YoungUk&nbsp;Kim</td></tr></table>
+</body></html>

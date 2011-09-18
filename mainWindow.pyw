@@ -294,6 +294,7 @@ class MainWindow(QMainWindow):
         statusBarLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Plain)
         
         statusBar = self.statusBar()
+        self.textEdit.statusBar = statusBar
         statusBar.addPermanentWidget(statusBarLabel)
         statusBar.showMessage("실행 완료", 5000)
 
