@@ -204,6 +204,10 @@ class MainWindow(QMainWindow):
                 "다른 이름으로 텍스트 파일 저장(&A)", 
                 ":saveAsTextFileIcon.png", QKeySequence.SaveAs, 
                 "다른 이름으로 텍스트 파일을 저장합니다.", self.SaveAsTextFile)
+
+        # Program Quit Action
+        quitAction = self.CreateAction("끝내기(&Q)", ":quitApplication.png",
+                QKeySequence.Quit, "프로그램을 종료합니다.", self.close)
  
         ### Dock Widget ###
         # Image Label Dock Widget
@@ -261,7 +265,8 @@ class MainWindow(QMainWindow):
         # 파일
         fileMenu = QMenu()
         self.AddActions(fileMenu, (newTextFileAction, None, openTextFileAction,
-            self.recentFilesMenu, None, saveTextFileAction, saveAsTextFileAction))
+            self.recentFilesMenu, None, saveTextFileAction, saveAsTextFileAction,
+            None, quitAction))
         fileMenuAction = self.CreateAction("파일(&F)", None, None, 
                 "파일의 열기 및 저장 등을 포함합니다")
         fileMenuAction.setMenu(fileMenu)

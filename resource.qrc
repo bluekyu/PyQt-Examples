@@ -18,5 +18,6 @@
 <file alias="openTextFileIcon.png">image/openTextFileIcon.png</file>
 <file alias="saveTextFileIcon.png">image/saveTextFileIcon.png</file>
 <file alias="saveAsTextFileIcon.png">image/saveAsTextFileIcon.png</file>
+<file alias="quitApplication.png">image/quitApplication.png</file>
 </qresource>
 </RCC>
