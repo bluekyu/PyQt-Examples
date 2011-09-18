@@ -1,4 +1,4 @@
-<!DOCTYPE RCC><RCC version="3.3.1">
+<!DOCTYPE RCC><RCC version="3.3.3">
 <qresource>
 <file alias="mainIcon.png">image/mainIcon.png</file>
 <file alias="simpleDialogIcon.png">image/simpleDialogIcon.png</file>

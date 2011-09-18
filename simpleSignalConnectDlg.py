@@ -17,6 +17,8 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 
 __version__ = "2.2.5"
+__author__ = "YoungUk Kim"
+__date__ = "09.18.2011"
 
 class ConnectDialog(QDialog):
     def __init__(self, parent=None):

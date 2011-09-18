@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """
 Copyright (C) 2011년 bluekyu (http://www.bluekyu.me/)
 이 프로그램은 자유 소프트웨어입니다. 소프트웨어의 피양도자는 자유 소프트웨어
@@ -23,10 +24,18 @@ import qrc_resource
 
 __version__ = "3.3.3"
 __program_name__ = "PyQt Example"
+__author__ = "YoungUk Kim"
+__date__ = "09.18.2011"
 
 class MainWindow(QMainWindow):
+    """메인 윈도우를 구성하는 클래스"""
+
     def __init__(self, parent=None):
+        """각종 객체들 초기화 및 위치 구성"""
+
         super().__init__(parent)
+
+        #################################################### Widget Setting ###
 
         ### Buttons ###
         buttonLayout = QFormLayout()
@@ -111,6 +120,10 @@ class MainWindow(QMainWindow):
 
         self.AddRows(itemLayout, (
                 ("리스트 위젯: ", self.listWidget),))
+
+        ################################################ Widget Setting End ###
+
+        #################################################### Action Setting ###
 
         ### Actions ###
         # Simple Dialog Open
@@ -209,7 +222,11 @@ class MainWindow(QMainWindow):
         # Program Quit Action
         quitAction = self.CreateAction("끝내기(&Q)", ":quitApplication.png",
                 QKeySequence.Quit, "프로그램을 종료합니다.", self.close)
+
+        ################################################ Action Setting End ###
  
+        ############################################### Dock Widget Setting ###
+
         ### Dock Widget ###
         # Image Label Dock Widget
         self.imageZoom = (100, 100)
@@ -231,7 +248,7 @@ class MainWindow(QMainWindow):
         self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.AddActions(self.imageLabel, (openImageAction, zoomImageAction))
 
-        # Plain Text Edit
+        # Plain Text Edit Dock Widget
         self.plainTextEdit = QPlainTextEdit()
         self.plainTextEdit.setMinimumSize(200, 200)
         self.plainTextEditChanged = False
@@ -239,6 +256,11 @@ class MainWindow(QMainWindow):
         self.plainTextEditFilePath = None
 
         def UserChangePlainTextEdit():
+            """사용자가 텍스트를 변경시켰을 때에만, 텍스트 변경 여부 작동.
+            
+            인자: 없음
+            리턴: 없음"""
+
             if (not self.plainTextEditChanged) and \
                                             self.plainTextEditChangedByUser:
                 self.plainTextEditChanged = True
@@ -256,14 +278,18 @@ class MainWindow(QMainWindow):
         self.plainTextEditDock.setContextMenuPolicy(Qt.ActionsContextMenu)
         self.AddActions(self.plainTextEditDock, (newTextFileAction,
             openTextFileAction, saveTextFileAction, saveAsTextFileAction))
+
+        ########################################### Dock Widget Setting End ###
+
+        ################################################## Menu Bar Setting ###
        
         ### Menu Bar ###
-        # 최근 파일 목록
+        # Recent Files List
         self.recentFilesMenu = QMenu("최근에 연 파일")
         self.connect(self.recentFilesMenu, SIGNAL("aboutToShow()"),
                         self.UpdateRecentFilesMenu)
 
-        # 파일
+        # File
         fileMenu = QMenu()
         self.AddActions(fileMenu, (newTextFileAction, None, openTextFileAction,
             self.recentFilesMenu, None, saveTextFileAction, saveAsTextFileAction,
@@ -273,7 +299,7 @@ class MainWindow(QMainWindow):
         fileMenuAction.setMenu(fileMenu)
         self.menuBar().addAction(fileMenuAction)
 
-        # 대화 상자
+        # Dialog
         dialogMenu = QMenu()
         self.AddActions(dialogMenu, (simpleDialogAction, signalDialogAction,
             connectDialogAction, None, dumbDialogAction, standardDialogAction,
@@ -283,7 +309,7 @@ class MainWindow(QMainWindow):
         dialogMenuAction.setMenu(dialogMenu)
         self.menuBar().addAction(dialogMenuAction)
 
-        # 이미지
+        # Image
         imageMenu = QMenu()
         self.AddActions(imageMenu, (openImageAction, zoomImageAction))
         imageMenuAction = self.CreateAction("이미지(&M)", None, None,
@@ -291,13 +317,17 @@ class MainWindow(QMainWindow):
         imageMenuAction.setMenu(imageMenu)
         self.menuBar().addAction(imageMenuAction)
 
-        # 도움말
+        # Help
         aboutMenu = QMenu()
         self.AddActions(aboutMenu, (helpAboutAction,))
         aboutMenuAction = self.CreateAction("도움말(&H)", None, None,
                 "도움말 및 정보를 포함합니다")
         aboutMenuAction.setMenu(aboutMenu)
         self.menuBar().addAction(aboutMenuAction)
+
+        ############################################## Menu Bar Setting End ###
+
+        ################################################## Tool Bar Setting ###
 
         ### Tool Bar ###
         # Dialog Tool Bar
@@ -321,7 +351,11 @@ class MainWindow(QMainWindow):
         self.statusBar.addPermanentWidget(statusBarLabel)
         self.statusBar.showMessage("실행 완료", 5000)
 
-        ### Main ###
+        ############################################## Tool Bar Setting End ###
+
+        ############################################### Main Window Setting ###
+
+        ### Main Window ###
         self.liveDialog = None
 
         mainLayout = QHBoxLayout()
@@ -351,9 +385,23 @@ class MainWindow(QMainWindow):
                 QByteArray()))
         self.restoreState(settings.value("mainWindow.State", QByteArray()))
 
-    ### Method ###
+        ########################################### Main Window Setting End ###
+
+    ################################################################ Method ###
+
     def CreateAction(self, name, icon=None, shortcut=None, tipHelp=None, 
                             slot=None, checkable=False, signal="triggered()"):
+        """액션을 설정하고 생성하는 메소드.
+        
+        인자: name - 액션 이름
+              icon - 액션의 아이콘
+              shortcut - 단축키
+              tipHelp - 툴팁과 상태표시줄 팁에 들어갈 도움말
+              slot - 액션에 connect를 추가할 때, 추가할 slot
+              checkable - 선택 가능 여부
+              signal - connect에서 작동할 시그널
+        리턴: action 객체"""
+
         action = QAction(name, self)
         if icon:
             action.setIcon(QIcon(icon))
@@ -370,6 +418,12 @@ class MainWindow(QMainWindow):
         return action
 
     def AddActions(self, target, actions):
+        """액션, 메뉴 또는 분리바를 정해진 위치에 추가하는 메소드.
+        
+        인자: target - 액션을 추가할 객체.
+              actions - (QAction | QMenu | None, ...) 형식
+        리턴: 없음"""
+
         for action in actions:
             if isinstance(action, QAction):
                 target.addAction(action)
@@ -379,10 +433,21 @@ class MainWindow(QMainWindow):
                 target.addSeparator()
 
     def AddRows(self, layout, rows):
+        """폼 레이아웃의 행에 객체를 추가함.
+
+        인자: layout - 폼 레이아웃
+              rows - ((label, field | label | field), ...) 형식
+        리턴: 없음"""
+
         for row in rows:
             layout.addRow(*row)
 
     def TextFileSaveOk(self):
+        """텍스트 파일을 저장할 것인지 확인하는 메소드.
+        
+        인자: 없음
+        리턴: 참, 거짓"""
+
         if self.plainTextEditChanged:
             answer = QMessageBox.question(self, "텍스트 파일 저장 확인",
                     "텍스트 파일이 저장되지 않았습니다. 저장하시겠습니까?",
@@ -394,6 +459,11 @@ class MainWindow(QMainWindow):
         return True
 
     def NewTextFile(self):
+        """새 텍스트 파일 생성.
+        
+        인자: 없음
+        리턴: 없음"""
+
         if not self.TextFileSaveOk():
             return
         self.plainTextEditFilePath = None
@@ -405,11 +475,15 @@ class MainWindow(QMainWindow):
         self.UpdatePlainTextEdit("새 파일이 열림")
 
     def OpenTextFile(self):
+        """텍스트 파일을 열음.
+        
+        인자: 없음
+        리턴: 없음"""
+
         if not self.TextFileSaveOk():
             return
         fileDir = dirname(self.plainTextEditFilePath) if \
                                     self.plainTextEditFilePath else "."
-
         filePath = QFileDialog.getOpenFileName(self, "텍스트 파일 열기",
                         fileDir, "텍스트 파일(*.txt);;모든 파일(*.*)")
 
@@ -417,9 +491,16 @@ class MainWindow(QMainWindow):
             self.LoadTextFile(filePath)
 
     def LoadTextFile(self, filePath):
+        """텍스트 파일을 불러옴.
+
+        인자: filePath - 텍스트 파일 경로.
+        리턴: 없음"""
+
+        # 최근 파일을 선택할 경우 파일 저장 여부 확인이 필요함.
         action = self.sender()
         if isinstance(action, QAction) and not self.TextFileSaveOk():
             return
+
         if filePath:
             self.plainTextEditFilePath = filePath
             self.plainTextEditChanged = False
@@ -431,6 +512,11 @@ class MainWindow(QMainWindow):
             self.UpdatePlainTextEdit("파일 열기 성공")
 
     def SaveTextFile(self):
+        """텍스트 파일을 저장함.
+        
+        인자: 없음
+        리턴: 없음"""
+
         if not self.plainTextEditChanged:
             return
         if self.plainTextEditFilePath is None:
@@ -442,6 +528,11 @@ class MainWindow(QMainWindow):
             self.UpdatePlainTextEdit("파일 저장 완료")
 
     def SaveAsTextFile(self):
+        """텍스트 파일을 다른 이름으로 저장함.
+        
+        인자: 없음
+        리턴: 없음"""
+
         fileDir = dirname(self.plainTextEditFilePath) if \
                             self.plainTextEditFilePath else "."
         filePath = QFileDialog.getSaveFileName(self, "텍스트 파일 저장",
@@ -454,6 +545,11 @@ class MainWindow(QMainWindow):
             self.SaveTextFile()
 
     def closeEvent(self, event):
+        """프로그램 종료 이벤트 발생시 호출되는 메소드에 대한 오버로딩.
+        
+        인자: event - 프로그램 종료 이벤트
+        리턴: 없음"""
+
         if self.TextFileSaveOk():
             settings = QSettings()
             settings.setValue("RecentFiles", self.recentFiles or [])
@@ -463,8 +559,14 @@ class MainWindow(QMainWindow):
             event.ignore()
 
     def AddRecentFiles(self, filePath):
+        """최근 파일 추가.
+        
+        인자: filePath - 파일 경로
+        리턴: 없음"""
+
         if filePath is None:
             return
+        # 최근 파일이 존재하는 경우 제거하고 맨 처음으로 넣기 위한 작업
         if filePath in self.recentFiles:
             self.recentFiles.remove(filePath)
         self.recentFiles.insert(0, filePath)
@@ -472,6 +574,11 @@ class MainWindow(QMainWindow):
             self.recentFiles.pop()
 
     def UpdateRecentFilesMenu(self):
+        """최근 연 파일 메뉴를 볼 경우 메뉴 갱신하는 메소드
+        
+        인자: 없음
+        리턴: 없음"""
+
         self.recentFilesMenu.clear()
         recentFiles = []
         for filePath in self.recentFiles:
@@ -487,6 +594,11 @@ class MainWindow(QMainWindow):
             self.recentFilesMenu.addAction(action)
 
     def UpdatePlainTextEdit(self, message):
+        """텍스트 에디터를 수정할 때 정보들을 갱신함.
+        
+        인자: message - 상태 표시줄에 나타낼 메시지
+        리턴: 없음"""
+
         if message:
             self.statusBar.showMessage(message, 5000)
 
@@ -497,6 +609,11 @@ class MainWindow(QMainWindow):
         self.plainTextEditDock.setWindowModified(self.plainTextEditChanged)
 
     def DumbCall(self):
+        """Dumb 대화 상자를 호출하는 메소드.
+        
+        인자: 없음
+        리턴: 없음"""
+
         dialog = introDlg.DumbDialog(self)
         dialog.dumbLineEdit.setText(self.mainLabel.text())
         dialog.dumbComboBox.clear()
@@ -514,6 +631,11 @@ class MainWindow(QMainWindow):
             self.mainSlider.setValue(dialog.dumbSlider.value())
 
     def StandardCall(self):
+        """Standard 대화 상자를 호출하는 메소드.
+        
+        인자: 없음
+        리턴: 없음"""
+
         mainComboBoxItems = [self.mainComboBox.itemText(idx) for idx in
                                 range(len(self.mainComboBox))]
         values = {"labelText": self.mainLabel.text(),
@@ -531,6 +653,11 @@ class MainWindow(QMainWindow):
             self.mainDial.setValue(values["dialValue"])
 
     def SmartCall(self):
+        """Smart 대화 상자를 호출하는 메소드.
+        
+        인자: 없음
+        리턴: 없음"""
+
         mainComboBoxItems = [self.mainComboBox.itemText(idx) for idx in
                                 range(len(self.mainComboBox))]
         def update():
@@ -549,6 +676,11 @@ class MainWindow(QMainWindow):
         dialog.show()
 
     def LiveCall(self):
+        """Live 대화 상자를 호출하는 메소드.
+        
+        인자: 없음
+        리턴: 없음"""
+
         mainComboBoxItems = [self.mainComboBox.itemText(idx) for idx in
                                 range(len(self.mainComboBox))]
         def update():
@@ -569,6 +701,11 @@ class MainWindow(QMainWindow):
         self.liveDialog.activateWindow()
 
     def GroupActionMessage(self, isChecked):
+        """그룹 액션이 호출되었을 때 나타낼 메시지
+        
+        인자: isChecked - 선택 되었는지 확인
+        리턴: 없음"""
+
         action = self.sender()
         if not (action and isChecked and isinstance(action, QAction)):
             return
@@ -577,6 +714,11 @@ class MainWindow(QMainWindow):
                     QMessageBox.Ok, self).open()
 
     def OpenImage(self):
+        """이미지를 여는 메소드.
+        
+        인자: 없음
+        리턴: 없음"""
+
         imageFormats = ["{0} 파일(*.{0})".format(ext.data().decode()) for ext in
                         QImageReader.supportedImageFormats()]
         imageFormats.append("모든 파일 (*.*)")
@@ -589,6 +731,11 @@ class MainWindow(QMainWindow):
             self.imageLabel.setPixmap(QPixmap.fromImage(self.image))
     
     def ImageZoom(self):
+        """이미지 확대/축소 대화 상자를 Dumb Modal 형식으로 열음.
+        
+        인자: 없음
+        리턴: 없음"""
+
         if self.image.isNull():
             return
         
@@ -610,11 +757,16 @@ class MainWindow(QMainWindow):
         sameZoomCheckBox.setChecked(self.sameZoomCheckState)
 
         def ValueSameSet(value):
+            """같은 비율 유지를 체크 했을 때 값이 같도록 변경
+            
+            인자: value - 확대 비율 값
+            리턴: 없음"""
+
             if sameZoomCheckBox.isChecked():
                 widthSpinBox.setValue(value)
                 heightSpinBox.setValue(value)
         
-        self.connect(widthSpinBox, SIGNAL("valueChanged(int)"),        
+        self.connect(widthSpinBox, SIGNAL("valueChanged(int)"), 
                         ValueSameSet)
         self.connect(heightSpinBox, SIGNAL("valueChanged(int)"),
                         ValueSameSet)
@@ -646,6 +798,11 @@ class MainWindow(QMainWindow):
             self.sameZoomCheckState = sameZoomCheckBox.isChecked()
 
     def HelpAbout(self):
+        """프로그램 정보를 알려주는 대화 상자를 열음
+        
+        인자: 없음
+        리턴: 없음"""
+
         from platform import python_version, system
         QMessageBox.about(self, "{} 정보".format(__program_name__),
                         """<b>{}</b> v. {}
