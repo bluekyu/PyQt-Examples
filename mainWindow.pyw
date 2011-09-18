@@ -14,15 +14,16 @@ PyQt Example 프로그램의 메인 윈도우를 담당하는 파일입니다.
 """
 
 import sys
-from os.path import dirname, basename
 from functools import partial
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import simpleSignalConnectDlg as sscDlg
 import introDialog as introDlg
+import dockWidgets as dock
+import objectControl as objCont
 import qrc_resource
 
-__version__ = "3.3.3"
+__version__ = "3.4.1"
 __program_name__ = "PyQt Example"
 __author__ = "YoungUk Kim"
 __date__ = "09.18.2011"
@@ -55,7 +56,7 @@ class MainWindow(QMainWindow):
         # Check Box
         self.mainCheckBox = QCheckBox("체크(&K)")
         
-        self.AddRows(buttonLayout, (
+        objCont.AddRows(buttonLayout, (
                 ("버튼: ", self.mainButton),
                 ("체크 상자: ", self.mainCheckBox)))
 
@@ -92,7 +93,7 @@ class MainWindow(QMainWindow):
         self.mainSlider.setValue(0)
         self.mainSlider.setTickPosition(QSlider.TicksBelow)
 
-        self.AddRows(inputLayout, (
+        objCont.AddRows(inputLayout, (
                 ("콤보 상자(&C): ", self.mainComboBox),
                 ("라인 편집(&I): ", self.mainLineEdit),
                 ("스핀 상자(&S): ", self.mainSpinBox),
@@ -107,7 +108,7 @@ class MainWindow(QMainWindow):
         # Label
         self.mainLabel = QLabel("레이블 내용")
 
-        self.AddRows(displayLayout, (
+        objCont.AddRows(displayLayout, (
                 ("레이블: ", self.mainLabel),))
 
         ### Item Widgets ###
@@ -121,7 +122,7 @@ class MainWindow(QMainWindow):
                                     for k in range(1, 5)])
         self.listWidget.setMinimumSize(100, 100)
 
-        self.AddRows(itemLayout, (
+        objCont.AddRows(itemLayout, (
                 ("리스트 위젯: ", self.listWidget),))
 
         ################################################ Widget Setting End ###
@@ -130,100 +131,74 @@ class MainWindow(QMainWindow):
 
         ### Actions ###
         # Simple Dialog Open
-        simpleDialogAction = self.CreateAction("단순 대화상자",
+        simpleDialogAction = objCont.CreateAction(self, "단순 대화상자",
                                 ":simpleDialogIcon.png", "Ctrl+S",
                                 "단순한 대화 상자를 엽니다",
                                 lambda: sscDlg.SimpleDialog(self).exec_())
 
         # Signal Dialog Open
-        signalDialogAction = self.CreateAction("시그널 대화상자",
+        signalDialogAction = objCont.CreateAction(self, "시그널 대화상자",
                                 ":signalDialogIcon.png", "Ctrl+G",
                                 "여러 시그널로 된 대화 상자를 엽니다",
                                 lambda: sscDlg.SignalDialog(self).exec_())
 
         # Connect Dialog Open
-        connectDialogAction = self.CreateAction("Connect 대화상자",
+        connectDialogAction = objCont.CreateAction(self, "Connect 대화상자",
                                 ":connectDialogIcon.png", "Ctrl+E",
                             "여러 연결 방식을 갖는 버튼 대화 상자를 엽니다",
                                 lambda: sscDlg.ConnectDialog(self).exec_())
 
         # Dumb Dialog Open
-        dumbDialogAction = self.CreateAction("Dumb 대화상자",
+        dumbDialogAction = objCont.CreateAction(self, "Dumb 대화상자",
                                 ":dumbDialogIcon.png", "Ctrl+M",
                                 "Dumb 및 Modal 대화 상자를 엽니다",
                                 self.DumbCall)
 
         # Standard Dialog Open
-        standardDialogAction = self.CreateAction("Standard 대화상자",
+        standardDialogAction = objCont.CreateAction(self, "Standard 대화상자",
                                 ":standardDialogIcon.png", "Ctrl+R",
                                 "Standard 및 Modal 대화 상자를 엽니다",
                                 self.StandardCall)
 
         # Smart Dialog Open
-        smartDialogAction = self.CreateAction("Smart 대화상자",
+        smartDialogAction = objCont.CreateAction(self, "Smart 대화상자",
                                 ":smartDialogIcon.png", "Ctrl+M",
                                 "Smart 및 Modaless 대화 상자를 엽니다",
                                 self.SmartCall)
 
         # Live Dialog Open
-        liveDialogAction = self.CreateAction("Live 대화상자",
+        liveDialogAction = objCont.CreateAction(self, "Live 대화상자",
                                 ":liveDialogIcon.png", "Ctrl+L",
                                 "Live 및 Modaless 대화 상자를 엽니다",
                                 self.LiveCall)
 
         # Group Action
-        messageAAction = self.CreateAction("A Action", ":iconA.png", None, None,
+        messageAAction = objCont.CreateAction(
+                            self, "A Action", ":iconA.png", None, None,
                             self.GroupActionMessage, True, "toggled(bool)")
         messageAAction.blockSignals(True)
         messageAAction.setChecked(True)
         messageAAction.blockSignals(False)
-        messageBAction = self.CreateAction("B Action", ":iconB.png", None, None,
+        messageBAction = objCont.CreateAction(
+                            self, "B Action", ":iconB.png", None, None,
                             self.GroupActionMessage, True, "toggled(bool)")
-        messageCAction = self.CreateAction("C Action", ":iconC.png", None, None,
+        messageCAction = objCont.CreateAction(
+                            self, "C Action", ":iconC.png", None, None,
                             self.GroupActionMessage, True, "toggled(bool)")
 
         groupAction = QActionGroup(self)
-        self.AddActions(groupAction, (
+        objCont.AddActions(groupAction, (
                 messageAAction, messageBAction, messageCAction))
 
-        # Open Image Action
-        openImageAction = self.CreateAction("이미지 열기", ":openImage.png",
-                            "Ctrl+I", "이미지를 나타냅니다", self.OpenImage)
-
-        # Zoom Image Action
-        zoomImageAction = self.CreateAction("이미지 확대/축소",
-                                ":zoomImage.png", None,
-                                "이미지를 확대하거나 축소합니다.",
-                                self.ImageZoom)
-
         # Help About Action
-        helpAboutAction = self.CreateAction("{} 정보".format(__program_name__),
+        helpAboutAction = objCont.CreateAction(
+                            self, "{} 정보".format(__program_name__),
                             None, None, "{}에 대한 정보를 보여줍니다.".format(
                             __program_name__), self.HelpAbout)
 
-        # New Text File Action
-        newTextFileAction = self.CreateAction("새 텍스트 파일(&N)", 
-                ":newTextFileIcon.png", QKeySequence.New, 
-                "새 텍스트 파일을 엽니다.", self.NewTextFile)
-
-        # Open Text File Action
-        openTextFileAction = self.CreateAction("텍스트 파일 열기(&O)", 
-                ":openTextFileIcon.png", QKeySequence.Open, 
-                "텍스트 파일을 엽니다.", self.OpenTextFile)
-
-        # Save Text File Action
-        saveTextFileAction = self.CreateAction("텍스트 파일 저장(&S)", 
-                ":saveTextFileIcon.png", QKeySequence.Save, 
-                "텍스트 파일을 저장합니다.", self.SaveTextFile)
-
-        # Save As Text File Action
-        saveAsTextFileAction = self.CreateAction(
-                "다른 이름으로 텍스트 파일 저장(&A)", 
-                ":saveAsTextFileIcon.png", QKeySequence.SaveAs, 
-                "다른 이름으로 텍스트 파일을 저장합니다.", self.SaveAsTextFile)
-
         # Program Quit Action
-        quitAction = self.CreateAction("끝내기(&Q)", ":quitApplication.png",
+        quitAction = objCont.CreateAction(
+                self, "끝내기(&Q)", ":quitApplication.png",
                 QKeySequence.Quit, "프로그램을 종료합니다.", self.close)
 
         ################################################ Action Setting End ###
@@ -232,55 +207,21 @@ class MainWindow(QMainWindow):
 
         ### Dock Widget ###
         # Image Label Dock Widget
-        self.imageZoom = (100, 100)
-        self.sameZoomCheckState = False
-        self.image = QImage(":kubuntuLogoIcon.png")
-
-        self.imageLabel = QLabel()
-        self.imageLabel.setMinimumSize(200, 200)
-        self.imageLabel.setAlignment(Qt.AlignCenter)
-        self.imageLabel.setFrameShape(QFrame.StyledPanel)
-        self.imageLabel.setPixmap(QPixmap.fromImage(self.image))
+        self.imageLabel = dock.ImageLabel()
 
         imageLabelDock = QDockWidget("이미지 Dock", self)
         imageLabelDock.setObjectName("TextBrowserDockWidget")
         imageLabelDock.setWidget(self.imageLabel)
         self.addDockWidget(Qt.BottomDockWidgetArea, imageLabelDock)
 
-        # Image Label in Dock Context Menu
-        self.imageLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
-        self.AddActions(self.imageLabel, (openImageAction, zoomImageAction))
-
         # Plain Text Edit Dock Widget
-        self.plainTextEdit = QPlainTextEdit()
-        self.plainTextEdit.setMinimumSize(200, 200)
-        self.plainTextEditChanged = False
-        self.plainTextEditChangedByUser = True
-        self.plainTextEditFilePath = None
+        self.textEdit = dock.TextEdit()
 
-        def UserChangePlainTextEdit():
-            """사용자가 텍스트를 변경시켰을 때에만, 텍스트 변경 여부 작동.
-            
-            인자: 없음
-            리턴: 없음"""
-
-            if (not self.plainTextEditChanged) and \
-                                            self.plainTextEditChangedByUser:
-                self.plainTextEditChanged = True
-                self.UpdatePlainTextEdit(None)
-
-        self.connect(self.plainTextEdit, SIGNAL("textChanged()"), 
-                                UserChangePlainTextEdit)
-        
-        self.plainTextEditDock = QDockWidget("텍스트 에디트 Dock", self)
-        self.plainTextEditDock.setObjectName("PlainTextEditDockWidget")
-        self.plainTextEditDock.setWidget(self.plainTextEdit)
-        self.addDockWidget(Qt.RightDockWidgetArea, self.plainTextEditDock)
-
-        # Plain Test Edit Context Menu
-        self.plainTextEditDock.setContextMenuPolicy(Qt.ActionsContextMenu)
-        self.AddActions(self.plainTextEditDock, (newTextFileAction,
-            openTextFileAction, saveTextFileAction, saveAsTextFileAction))
+        self.textEditDock = QDockWidget(self)
+        self.textEditDock.setObjectName("PlainTextEditDockWidget")
+        self.textEditDock.setTitleBarWidget(self.textEdit.titleLabel)
+        self.textEditDock.setWidget(self.textEdit)
+        self.addDockWidget(Qt.RightDockWidgetArea, self.textEditDock)
 
         ########################################### Dock Widget Setting End ###
 
@@ -288,42 +229,44 @@ class MainWindow(QMainWindow):
        
         ### Menu Bar ###
         # Recent Files List
-        self.recentFilesMenu = QMenu("최근에 연 파일")
-        self.connect(self.recentFilesMenu, SIGNAL("aboutToShow()"),
-                        self.UpdateRecentFilesMenu)
+        self.textEditRecentFilesMenu = QMenu("최근에 연 파일")
+        self.connect(self.textEditRecentFilesMenu, SIGNAL("aboutToShow()"),
+                        self.UpdateTextEditRecentFilesMenu)
 
         # File
         fileMenu = QMenu()
-        self.AddActions(fileMenu, (newTextFileAction, None, openTextFileAction,
-            self.recentFilesMenu, None, saveTextFileAction, saveAsTextFileAction,
-            None, quitAction))
-        fileMenuAction = self.CreateAction("파일(&F)", None, None, 
+        objCont.AddActions(fileMenu, (self.textEdit.actions[0], None,
+                self.textEdit.actions[1], self.textEditRecentFilesMenu,
+                None, self.textEdit.actions[2], self.textEdit.actions[3],
+                None, quitAction))
+        fileMenuAction = objCont.CreateAction(self, "파일(&F)", None, None, 
                 "파일의 열기 및 저장 등을 포함합니다")
         fileMenuAction.setMenu(fileMenu)
         self.menuBar().addAction(fileMenuAction)
 
         # Dialog
         dialogMenu = QMenu()
-        self.AddActions(dialogMenu, (simpleDialogAction, signalDialogAction,
+        objCont.AddActions(dialogMenu, (simpleDialogAction, signalDialogAction,
             connectDialogAction, None, dumbDialogAction, standardDialogAction,
             smartDialogAction, liveDialogAction))
-        dialogMenuAction = self.CreateAction("대화 상자(&A)", None, None,
+        dialogMenuAction = objCont.CreateAction(
+                self, "대화 상자(&A)", None, None,
                 "여러 대화 상자 종류들을 포함합니다")
         dialogMenuAction.setMenu(dialogMenu)
         self.menuBar().addAction(dialogMenuAction)
 
         # Image
         imageMenu = QMenu()
-        self.AddActions(imageMenu, (openImageAction, zoomImageAction))
-        imageMenuAction = self.CreateAction("이미지(&M)", None, None,
+        objCont.AddActions(imageMenu, self.imageLabel.actions)
+        imageMenuAction = objCont.CreateAction(self, "이미지(&M)", None, None,
                 "이미지를 조절합니다")
         imageMenuAction.setMenu(imageMenu)
         self.menuBar().addAction(imageMenuAction)
 
         # Help
         aboutMenu = QMenu()
-        self.AddActions(aboutMenu, (helpAboutAction,))
-        aboutMenuAction = self.CreateAction("도움말(&H)", None, None,
+        objCont.AddActions(aboutMenu, (helpAboutAction,))
+        aboutMenuAction = objCont.CreateAction(self, "도움말(&H)", None, None,
                 "도움말 및 정보를 포함합니다")
         aboutMenuAction.setMenu(aboutMenu)
         self.menuBar().addAction(aboutMenuAction)
@@ -336,23 +279,23 @@ class MainWindow(QMainWindow):
         # Dialog Tool Bar
         dialogToolBar = self.addToolBar("Dialog")
         dialogToolBar.setObjectName("DialogToolBar")
-        self.AddActions(dialogToolBar, (simpleDialogAction, signalDialogAction,
+        objCont.AddActions(dialogToolBar, (simpleDialogAction, signalDialogAction,
             connectDialogAction, None, dumbDialogAction, standardDialogAction,
             smartDialogAction, liveDialogAction))
 
         # Group Actoin Tool Bar
         groupActionToolBar = self.addToolBar("GruopAction")
         groupActionToolBar.setObjectName("GroupActionToolBar")
-        self.AddActions(groupActionToolBar, (messageAAction, messageBAction,
+        objCont.AddActions(groupActionToolBar, (messageAAction, messageBAction,
             messageCAction))
 
         ### Status Bar ###
         statusBarLabel = QLabel("상태표시줄")
         statusBarLabel.setFrameStyle(QFrame.StyledPanel|QFrame.Plain)
         
-        self.statusBar = self.statusBar()
-        self.statusBar.addPermanentWidget(statusBarLabel)
-        self.statusBar.showMessage("실행 완료", 5000)
+        statusBar = self.statusBar()
+        statusBar.addPermanentWidget(statusBarLabel)
+        statusBar.showMessage("실행 완료", 5000)
 
         ############################################## Tool Bar Setting End ###
 
@@ -374,7 +317,7 @@ class MainWindow(QMainWindow):
         centralWidget.setContextMenuPolicy(Qt.ActionsContextMenu)
         contextSeparator = QAction(self)
         contextSeparator.setSeparator(True)
-        self.AddActions(centralWidget, (simpleDialogAction, signalDialogAction,
+        objCont.AddActions(centralWidget, (simpleDialogAction, signalDialogAction,
             connectDialogAction, contextSeparator, dumbDialogAction,
             standardDialogAction, smartDialogAction, liveDialogAction))
 
@@ -383,7 +326,7 @@ class MainWindow(QMainWindow):
 
         ### Settings Restore ###
         settings = QSettings()
-        self.recentFiles = settings.value("RecentFiles") or []
+        self.textEdit.recentFiles = settings.value("TextEditRecentFiles") or []
         self.restoreGeometry(settings.value("mainWindow.Geometry",
                 QByteArray()))
         self.restoreState(settings.value("mainWindow.State", QByteArray()))
@@ -392,224 +335,39 @@ class MainWindow(QMainWindow):
 
     ################################################################ Method ###
 
-    def CreateAction(self, name, icon=None, shortcut=None, tipHelp=None, 
-                            slot=None, checkable=False, signal="triggered()"):
-        """액션을 설정하고 생성하는 메소드.
-        
-        인자: name - 액션 이름
-              icon - 액션의 아이콘
-              shortcut - 단축키
-              tipHelp - 툴팁과 상태표시줄 팁에 들어갈 도움말
-              slot - 액션에 connect를 추가할 때, 추가할 slot
-              checkable - 선택 가능 여부
-              signal - connect에서 작동할 시그널
-        리턴: action 객체"""
-
-        action = QAction(name, self)
-        if icon:
-            action.setIcon(QIcon(icon))
-        if shortcut:
-            action.setShortcut(shortcut)
-        if tipHelp:
-            action.setToolTip(tipHelp)
-            action.setStatusTip(tipHelp)
-        if slot:
-            self.connect(action, SIGNAL(signal), slot)
-        if checkable:
-            action.setCheckable(True)
-
-        return action
-
-    def AddActions(self, target, actions):
-        """액션, 메뉴 또는 분리바를 정해진 위치에 추가하는 메소드.
-        
-        인자: target - 액션을 추가할 객체.
-              actions - (QAction | QMenu | None, ...) 형식
-        리턴: 없음"""
-
-        for action in actions:
-            if isinstance(action, QAction):
-                target.addAction(action)
-            elif isinstance(action, QMenu):
-                target.addMenu(action)
-            else:
-                target.addSeparator()
-
-    def AddRows(self, layout, rows):
-        """폼 레이아웃의 행에 객체를 추가함.
-
-        인자: layout - 폼 레이아웃
-              rows - ((label, field | label | field), ...) 형식
-        리턴: 없음"""
-
-        for row in rows:
-            layout.addRow(*row)
-
-    def TextFileSaveOk(self):
-        """텍스트 파일을 저장할 것인지 확인하는 메소드.
-        
-        인자: 없음
-        리턴: 참, 거짓"""
-
-        if self.plainTextEditChanged:
-            answer = QMessageBox.question(self, "텍스트 파일 저장 확인",
-                    "텍스트 파일이 저장되지 않았습니다. 저장하시겠습니까?",
-                    QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
-            if answer == QMessageBox.Cancel:
-                return False
-            elif answer == QMessageBox.Yes:
-                self.SaveTextFile()
-        return True
-
-    def NewTextFile(self):
-        """새 텍스트 파일 생성.
-        
-        인자: 없음
-        리턴: 없음"""
-
-        if not self.TextFileSaveOk():
-            return
-        self.plainTextEditFilePath = None
-        self.plainTextEditChanged = False
-        self.plainTextEditChangedByUser = False
-        self.plainTextEdit.clear()
-        self.plainTextEditChangedByUser = True
-
-        self.UpdatePlainTextEdit("새 파일이 열림")
-
-    def OpenTextFile(self):
-        """텍스트 파일을 열음.
-        
-        인자: 없음
-        리턴: 없음"""
-
-        if not self.TextFileSaveOk():
-            return
-        fileDir = dirname(self.plainTextEditFilePath) if \
-                                    self.plainTextEditFilePath else "."
-        filePath = QFileDialog.getOpenFileName(self, "텍스트 파일 열기",
-                        fileDir, "텍스트 파일(*.txt);;모든 파일(*.*)")
-
-        if filePath:
-            self.LoadTextFile(filePath)
-
-    def LoadTextFile(self, filePath):
-        """텍스트 파일을 불러옴.
-
-        인자: filePath - 텍스트 파일 경로.
-        리턴: 없음"""
-
-        # 최근 파일을 선택할 경우 파일 저장 여부 확인이 필요함.
-        action = self.sender()
-        if isinstance(action, QAction) and not self.TextFileSaveOk():
-            return
-
-        if filePath:
-            self.plainTextEditFilePath = filePath
-            self.plainTextEditChanged = False
-            self.plainTextEditChangedByUser = False
-            text = open(filePath, "r").read()
-            self.plainTextEdit.setPlainText(text)
-            self.plainTextEditChangedByUser = True
-            self.AddRecentFiles(filePath)
-            self.UpdatePlainTextEdit("파일 열기 성공")
-
-    def SaveTextFile(self):
-        """텍스트 파일을 저장함.
-        
-        인자: 없음
-        리턴: 없음"""
-
-        if not self.plainTextEditChanged:
-            return
-        if self.plainTextEditFilePath is None:
-            self.SaveAsTextFile()
-        else:
-            textFile = open(self.plainTextEditFilePath, "w")
-            textFile.write(self.plainTextEdit.toPlainText())
-            self.plainTextEditChanged = False
-            self.UpdatePlainTextEdit("파일 저장 완료")
-
-    def SaveAsTextFile(self):
-        """텍스트 파일을 다른 이름으로 저장함.
-        
-        인자: 없음
-        리턴: 없음"""
-
-        fileDir = dirname(self.plainTextEditFilePath) if \
-                            self.plainTextEditFilePath else "."
-        filePath = QFileDialog.getSaveFileName(self, "텍스트 파일 저장",
-                                fileDir, "텍스트 파일(*.txt);;모든 파일(*.*)")
-        
-        if filePath:
-            self.AddRecentFiles(filePath)
-            self.plainTextEditFilePath = filePath
-            self.plainTextEditChanged = True
-            self.SaveTextFile()
-
     def closeEvent(self, event):
         """프로그램 종료 이벤트 발생시 호출되는 메소드에 대한 오버로딩.
         
         인자: event - 프로그램 종료 이벤트
         리턴: 없음"""
 
-        if self.TextFileSaveOk():
+        if self.textEdit.TextFileSaveOk():
             settings = QSettings()
-            settings.setValue("RecentFiles", self.recentFiles or [])
+            settings.setValue("TextEditRecentFiles", 
+                                    self.textEdit.recentFiles or [])
             settings.setValue("mainWindow.Geometry", self.saveGeometry())
             settings.setValue("mainWindow.State", self.saveState())
         else:
             event.ignore()
 
-    def AddRecentFiles(self, filePath):
-        """최근 파일 추가.
-        
-        인자: filePath - 파일 경로
-        리턴: 없음"""
-
-        if filePath is None:
-            return
-        # 최근 파일이 존재하는 경우 제거하고 맨 처음으로 넣기 위한 작업
-        if filePath in self.recentFiles:
-            self.recentFiles.remove(filePath)
-        self.recentFiles.insert(0, filePath)
-        if len(self.recentFiles) > 9:
-            self.recentFiles.pop()
-
-    def UpdateRecentFilesMenu(self):
+    def UpdateTextEditRecentFilesMenu(self):
         """최근 연 파일 메뉴를 볼 경우 메뉴 갱신하는 메소드
         
         인자: 없음
         리턴: 없음"""
 
-        self.recentFilesMenu.clear()
+        self.textEditRecentFilesMenu.clear()
         recentFiles = []
-        for filePath in self.recentFiles:
-            if filePath != self.plainTextEditFilePath and \
-                    QFile.exists(filePath):
+        for filePath in self.textEdit.recentFiles:
+            if filePath != self.textEdit.filePath and QFile.exists(filePath):
                 recentFiles.append(filePath)
 
         for i, filePath in enumerate(recentFiles):
             action = QAction("&{} {}".format(i+1, filePath), self)
             action.setData(filePath)
             self.connect(action, SIGNAL("triggered()"), 
-                            partial(self.LoadTextFile, filePath))
-            self.recentFilesMenu.addAction(action)
-
-    def UpdatePlainTextEdit(self, message):
-        """텍스트 에디터를 수정할 때 정보들을 갱신함.
-        
-        인자: message - 상태 표시줄에 나타낼 메시지
-        리턴: 없음"""
-
-        if message:
-            self.statusBar.showMessage(message, 5000)
-
-        fileName = basename(self.plainTextEditFilePath) if \
-                        self.plainTextEditFilePath else "이름 없음"
-        self.plainTextEditDock.setWindowTitle(
-                                "{}[*]".format(fileName))
-        self.plainTextEditDock.setWindowModified(self.plainTextEditChanged)
+                            partial(self.textEdit.LoadTextFile, filePath))
+            self.textEditRecentFilesMenu.addAction(action)
 
     def DumbCall(self):
         """Dumb 대화 상자를 호출하는 메소드.
@@ -715,90 +473,6 @@ class MainWindow(QMainWindow):
         QMessageBox(QMessageBox.Information, "메시지 박스의 메시지",
                     "그룹 Action 중 {}이 클릭됨".format(action.text()),
                     QMessageBox.Ok, self).open()
-
-    def OpenImage(self):
-        """이미지를 여는 메소드.
-        
-        인자: 없음
-        리턴: 없음"""
-
-        imageFormats = ["{0} 파일(*.{0})".format(ext.data().decode()) for ext in
-                        QImageReader.supportedImageFormats()]
-        imageFormats.append("모든 파일 (*.*)")
-        fileDialog = QFileDialog(self, "이미지 열기", ".")
-        fileDialog.setFilters(imageFormats)
-        fileDialog.setAcceptMode(QFileDialog.AcceptOpen)
-        if fileDialog.exec_():
-            imageLink = fileDialog.selectedFiles()[0]
-            self.image = QImage(imageLink)
-            self.imageLabel.setPixmap(QPixmap.fromImage(self.image))
-    
-    def ImageZoom(self):
-        """이미지 확대/축소 대화 상자를 Dumb Modal 형식으로 열음.
-        
-        인자: 없음
-        리턴: 없음"""
-
-        if self.image.isNull():
-            return
-        
-        zoomDialog = QDialog(self)
-
-        widthSpinBox = QSpinBox()
-        widthSpinBox.setRange(0, 500)
-        widthSpinBox.setSuffix(" %")
-        heightSpinBox = QSpinBox()
-        heightSpinBox.setRange(0, 500)
-        heightSpinBox.setSuffix(" %")
-        
-        image = self.imageLabel.pixmap().toImage()
-
-        widthSpinBox.setValue(self.imageZoom[0])
-        heightSpinBox.setValue(self.imageZoom[1])
-
-        sameZoomCheckBox = QCheckBox("같은 비율 유지")
-        sameZoomCheckBox.setChecked(self.sameZoomCheckState)
-
-        def ValueSameSet(value):
-            """같은 비율 유지를 체크 했을 때 값이 같도록 변경
-            
-            인자: value - 확대 비율 값
-            리턴: 없음"""
-
-            if sameZoomCheckBox.isChecked():
-                widthSpinBox.setValue(value)
-                heightSpinBox.setValue(value)
-        
-        self.connect(widthSpinBox, SIGNAL("valueChanged(int)"), 
-                        ValueSameSet)
-        self.connect(heightSpinBox, SIGNAL("valueChanged(int)"),
-                        ValueSameSet)
-        self.connect(sameZoomCheckBox, SIGNAL("stateChanged(int)"),
-                    lambda: ValueSameSet(widthSpinBox.value()))
-        
-        buttonBox = QDialogButtonBox(QDialogButtonBox.Ok | 
-                                        QDialogButtonBox.Cancel)
-        self.connect(buttonBox, SIGNAL("accepted()"), zoomDialog,
-                        SLOT("accept()"))
-        self.connect(buttonBox, SIGNAL("rejected()"), zoomDialog,
-                        SLOT("reject()"))
-
-        layout = QFormLayout()
-        layout.addRow("너비: ", widthSpinBox)
-        layout.addRow("높이: ", heightSpinBox)
-        layout.addWidget(sameZoomCheckBox)
-        layout.addWidget(buttonBox)
-
-        zoomDialog.setLayout(layout)
-        zoomDialog.setWindowTitle("이미지 확대/축소")
-
-        if zoomDialog.exec_():
-            self.imageZoom = (widthSpinBox.value(), heightSpinBox.value())
-            width = self.image.width() * self.imageZoom[0] // 100
-            height = self.image.height() * self.imageZoom[1] // 100
-            image = self.image.scaled(width, height)
-            self.imageLabel.setPixmap(QPixmap.fromImage(image))
-            self.sameZoomCheckState = sameZoomCheckBox.isChecked()
 
     def HelpAbout(self):
         """프로그램 정보를 알려주는 대화 상자를 열음
