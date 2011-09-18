@@ -405,12 +405,15 @@ class MainWindow(QMainWindow):
                                     self.plainTextEditFilePath else "."
 
         filePath = QFileDialog.getOpenFileName(self, "텍스트 파일 열기",
-                        fileDir, "텍스트 파일 (*.txt)\n모든 파일 (*.*)")
+                        fileDir, "텍스트 파일(*.txt);;모든 파일(*.*)")
 
         if filePath:
             self.LoadTextFile(filePath)
 
     def LoadTextFile(self, filePath):
+        action = self.sender()
+        if isinstance(action, QAction) and not self.TextFileSaveOk():
+            return
         if filePath:
             self.plainTextEditFilePath = filePath
             self.plainTextEditChanged = False
@@ -422,10 +425,27 @@ class MainWindow(QMainWindow):
             self.UpdatePlainTextEdit("파일 열기 성공")
 
     def SaveTextFile(self):
-        pass
+        if not self.plainTextEditChanged:
+            return
+        if self.plainTextEditFilePath is None:
+            self.SaveAsTextFile()
+        else:
+            textFile = open(self.plainTextEditFilePath, "w")
+            textFile.write(self.plainTextEdit.toPlainText())
+            self.plainTextEditChanged = False
+            self.UpdatePlainTextEdit("파일 저장 완료")
 
     def SaveAsTextFile(self):
-        pass
+        fileDir = dirname(self.plainTextEditFilePath) if \
+                            self.plainTextEditFilePath else "."
+        filePath = QFileDialog.getSaveFileName(self, "텍스트 파일 저장",
+                                fileDir, "텍스트 파일(*.txt);;모든 파일(*.*)")
+        
+        if filePath:
+            self.AddRecentFiles(filePath)
+            self.plainTextEditFilePath = filePath
+            self.plainTextEditChanged = True
+            self.SaveTextFile()
 
     def closeEvent(self, event):
         if self.TextFileSaveOk():
@@ -439,10 +459,11 @@ class MainWindow(QMainWindow):
     def AddRecentFiles(self, filePath):
         if filePath is None:
             return
-        if filePath not in self.recentFiles:
-            self.recentFiles.insert(0, filePath)
-            if len(self.recentFiles) > 9:
-                self.recentFiles.pop()
+        if filePath in self.recentFiles:
+            self.recentFiles.remove(filePath)
+        self.recentFiles.insert(0, filePath)
+        if len(self.recentFiles) > 9:
+            self.recentFiles.pop()
 
     def UpdateRecentFilesMenu(self):
         self.recentFilesMenu.clear()
@@ -550,7 +571,7 @@ class MainWindow(QMainWindow):
                     QMessageBox.Ok, self).open()
 
     def OpenImage(self):
-        imageFormats = ["{0} 파일 (*.{0})".format(ext.data().decode()) for ext in
+        imageFormats = ["{0} 파일(*.{0})".format(ext.data().decode()) for ext in
                         QImageReader.supportedImageFormats()]
         imageFormats.append("모든 파일 (*.*)")
         fileDialog = QFileDialog(self, "이미지 열기", ".")
