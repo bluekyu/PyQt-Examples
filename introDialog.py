@@ -26,7 +26,12 @@ class LiveDialog(QDialog):
     """Live 대화 상자 객체"""
 
     def __init__(self, values, update, parent=None):
-        """대화 상자 초기화"""
+        """대화 상자 초기화.
+        
+        인자: values - 메인 윈도우에 적용되는 값들의 리스트
+              update - 값들을 적용하는 함수
+              parent - 부모 윈도우
+        리턴: 없음"""
 
         super().__init__(parent)
 
@@ -70,15 +75,23 @@ class LiveDialog(QDialog):
         self.setWindowTitle("Live Dialog")
 
     def checkFix(self):
+        """슬라이더를 조절하는 텍스트를 수정하는 메소드.
+        
+        인자: 없음
+        리턴: 없음"""
+
         sliderEditValueText = self.liveSliderEdit.text()
+        # 음수 처리
         if sliderEditValueText == "-":
             self.liveSliderEdit.setText("-0")
             self.liveSliderEdit.setCursorPosition(1)
             self.liveSliderEdit.setFocus()
+        # 빈칸 처리
         elif len(sliderEditValueText) == 0: 
             self.liveSliderEdit.setText("0")
             self.liveSliderEdit.setCursorPosition(0)
             self.liveSliderEdit.setFocus()
+        # 최대, 최소 처리
         elif int(sliderEditValueText) < self.values["sliderMinimum"] or \
             int(sliderEditValueText) > self.values["sliderMaximum"]:
             self.liveSliderEdit.backspace()
@@ -86,6 +99,11 @@ class LiveDialog(QDialog):
         self.apply()
 
     def apply(self):
+        """대화상자 값을 메인 윈도우에 적용하는 메소드.
+        
+        인자: 없음
+        리턴: 없음"""
+
         sliderEditValue = int(self.liveSliderEdit.text())
         self.values["labelText"] = self.liveLineEdit.text()
         self.values["comboBoxIndex"] = self.liveComboBox.currentIndex()
@@ -93,8 +111,17 @@ class LiveDialog(QDialog):
         self.update()
 
 class SmartDialog(QDialog):
+    """Smart 대화 상자 클래스"""
+
     def __init__(self, values, parent=None):
+        """객체 초기화
+        
+        인자: values - 메인 윈도우에 적용시키는 값들의 리스트
+              parent - 부모 윈도우
+        리턴: 없음"""
+
         super().__init__(parent)
+        # 닫혔을 때 객체를 삭제하도록 지시
         self.setAttribute(Qt.WA_DeleteOnClose)
 
         smartLineEditLabel = QLabel("Main 레이블 변경(&L): ")
@@ -139,6 +166,11 @@ class SmartDialog(QDialog):
         self.setWindowTitle("Smart Dialog")
 
     def apply(self):
+        """값들을 메인 윈도우에 적용시키는 메소드.
+        
+        인자: 없음
+        리턴: 없음"""
+
         class OutOfRangeNumberError(Exception): pass
 
         try:
@@ -167,7 +199,15 @@ class SmartDialog(QDialog):
         self.emit(SIGNAL("changed"))
 
 class StandardDialog(QDialog):
+    """Standard 대화 상자 클래스"""
+
     def __init__(self, values, parent=None):
+        """객체 초기화
+        
+        인자: values - 값들을 적용시키는 리스트
+              parent - 부모 윈도우
+        리턴: 없음"""
+
         super().__init__(parent)
 
         standardLineEditLabel = QLabel("Main 레이블 변경(&L): ")
@@ -209,6 +249,11 @@ class StandardDialog(QDialog):
         self.setWindowTitle("Standard Dialog")
 
     def accept(self):
+        """객체 적용이 확인 되었을 때, 값들을 리스트에 저장 시키는 메소드.
+        
+        인자: 없음
+        리턴: 없음"""
+
         class OutOfRangeError(Exception): pass
 
         try:
@@ -236,10 +281,22 @@ class StandardDialog(QDialog):
         QDialog.accept(self)
 
     def getValues(self):
+        """대화 상자에서 변경된 값을 얻는 메소드
+        
+        인자: 없음
+        리턴: values 값 리스트"""
+
         return self.values
 
 class DumbDialog(QDialog):
+    """Dumb 대화 상자 클래스"""
+
     def __init__(self, parent=None):
+        """객체 초기화
+        
+        인자: parent - 부모 윈도우
+        리턴: 없음"""
+
         super().__init__(parent)
 
         dumbLineEditLabel = QLabel("Main 레이블 변경(&L): ")

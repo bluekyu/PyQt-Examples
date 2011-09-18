@@ -31,7 +31,10 @@ class MainWindow(QMainWindow):
     """메인 윈도우를 구성하는 클래스"""
 
     def __init__(self, parent=None):
-        """각종 객체들 초기화 및 위치 구성"""
+        """각종 객체들 초기화 및 위치 구성
+        
+        인자: parent - 부모 윈도우
+        리턴: 없음"""
 
         super().__init__(parent)
 
@@ -334,8 +337,8 @@ class MainWindow(QMainWindow):
         dialogToolBar = self.addToolBar("Dialog")
         dialogToolBar.setObjectName("DialogToolBar")
         self.AddActions(dialogToolBar, (simpleDialogAction, signalDialogAction,
-            connectDialogAction, None, standardDialogAction, smartDialogAction,
-            liveDialogAction))
+            connectDialogAction, None, dumbDialogAction, standardDialogAction,
+            smartDialogAction, liveDialogAction))
 
         # Group Actoin Tool Bar
         groupActionToolBar = self.addToolBar("GruopAction")

@@ -9,14 +9,16 @@
 <font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>simpleSignalConnectDlg</strong></big></big> (version 2.2.5, 09.18.2011)</font></td
 ><td align=right valign=bottom
 ><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/hda2/Programming/PyQt4/MyCode/Tutorial/simpleSignalConnectDlg.py">/home/hda2/Programming/PyQt4/MyCode/Tutorial/simpleSignalConnectDlg.py</a></font></td></tr></table>
-    <p><tt>#&nbsp;Copyright&nbsp;(C)&nbsp;2011년&nbsp;bluekyu&nbsp;(<a href="http://www.bluekyu.me/">http://www.bluekyu.me/</a>)<br>
-#&nbsp;이&nbsp;프로그램은&nbsp;자유&nbsp;소프트웨어입니다.&nbsp;소프트웨어의&nbsp;피양도자는&nbsp;자유&nbsp;소프트웨어<br>
-#&nbsp;재단이&nbsp;공표한&nbsp;GNU&nbsp;일반&nbsp;공중&nbsp;사용&nbsp;허가서&nbsp;2판&nbsp;또는&nbsp;그&nbsp;이후&nbsp;판을&nbsp;임의로<br>
-#&nbsp;선택해서,&nbsp;그&nbsp;규정에&nbsp;따라&nbsp;프로그램을&nbsp;개작하거나&nbsp;재배포할&nbsp;수&nbsp;있습니다.<br>
-#&nbsp;이&nbsp;프로그램은&nbsp;유용하게&nbsp;사용될&nbsp;수&nbsp;있으리라는&nbsp;희망에서&nbsp;배포되고&nbsp;있지만,<br>
-#&nbsp;특정한&nbsp;목적에&nbsp;맞는&nbsp;적합성&nbsp;여부나&nbsp;판매용으로&nbsp;사용할&nbsp;수&nbsp;있으리라는&nbsp;묵시적인<br>
-#&nbsp;보증을&nbsp;포함한&nbsp;어떠한&nbsp;형태의&nbsp;보증도&nbsp;제공하지&nbsp;않습니다.&nbsp;보다&nbsp;자세한&nbsp;사항에<br>
-#&nbsp;대해서는&nbsp;GNU&nbsp;일반&nbsp;공중&nbsp;사용&nbsp;허가서를&nbsp;참고하시기&nbsp;바랍니다.</tt></p>
+    <p><tt>Copyright&nbsp;(C)&nbsp;2011년&nbsp;bluekyu&nbsp;(<a href="http://www.bluekyu.me/">http://www.bluekyu.me/</a>)<br>
+이&nbsp;프로그램은&nbsp;자유&nbsp;소프트웨어입니다.&nbsp;소프트웨어의&nbsp;피양도자는&nbsp;자유&nbsp;소프트웨어<br>
+재단이&nbsp;공표한&nbsp;GNU&nbsp;일반&nbsp;공중&nbsp;사용&nbsp;허가서&nbsp;2판&nbsp;또는&nbsp;그&nbsp;이후&nbsp;판을&nbsp;임의로<br>
+선택해서,&nbsp;그&nbsp;규정에&nbsp;따라&nbsp;프로그램을&nbsp;개작하거나&nbsp;재배포할&nbsp;수&nbsp;있습니다.<br>
+이&nbsp;프로그램은&nbsp;유용하게&nbsp;사용될&nbsp;수&nbsp;있으리라는&nbsp;희망에서&nbsp;배포되고&nbsp;있지만,<br>
+특정한&nbsp;목적에&nbsp;맞는&nbsp;적합성&nbsp;여부나&nbsp;판매용으로&nbsp;사용할&nbsp;수&nbsp;있으리라는&nbsp;묵시적인<br>
+보증을&nbsp;포함한&nbsp;어떠한&nbsp;형태의&nbsp;보증도&nbsp;제공하지&nbsp;않습니다.&nbsp;보다&nbsp;자세한&nbsp;사항에<br>
+대해서는&nbsp;GNU&nbsp;일반&nbsp;공중&nbsp;사용&nbsp;허가서를&nbsp;참고하시기&nbsp;바랍니다.<br>
+&nbsp;<br>
+Simple,&nbsp;Signal,&nbsp;Connect&nbsp;대화&nbsp;상자들을&nbsp;나타내는&nbsp;프로그램.</tt></p>
 <p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#aa55cc">
@@ -54,7 +56,9 @@
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="ConnectDialog">class <strong>ConnectDialog</strong></a>(<a href="PyQt4.QtGui.html#QDialog">PyQt4.QtGui.QDialog</a>)</font></td></tr>
     
-<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Connect&nbsp;대화&nbsp;상자&nbsp;클래스<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="simpleSignalConnectDlg.html#ConnectDialog">ConnectDialog</a></dd>
 <dd><a href="PyQt4.QtGui.html#QDialog">PyQt4.QtGui.QDialog</a></dd>
@@ -67,11 +71,20 @@
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="ConnectDialog-ButtonClick"><strong>ButtonClick</strong></a>(self, buttonName)</dt></dl>
+<dl><dt><a name="ConnectDialog-ButtonClick"><strong>ButtonClick</strong></a>(self, buttonName)</dt><dd><tt>버튼을&nbsp;클릭&nbsp;했을&nbsp;때,&nbsp;넘겨진&nbsp;이름으로&nbsp;레이블에&nbsp;텍스트를&nbsp;표시함<br>
+&nbsp;<br>
+인자:&nbsp;buttonName&nbsp;-&nbsp;버튼&nbsp;이름<br>
+리턴:&nbsp;없음</tt></dd></dl>
 
-<dl><dt><a name="ConnectDialog-SenderButtonClick"><strong>SenderButtonClick</strong></a>(self)</dt></dl>
+<dl><dt><a name="ConnectDialog-SenderButtonClick"><strong>SenderButtonClick</strong></a>(self)</dt><dd><tt>클릭한&nbsp;버튼을&nbsp;판단하여&nbsp;레이블에&nbsp;텍스트를&nbsp;표시함<br>
+&nbsp;<br>
+인자:&nbsp;없음<br>
+리턴:&nbsp;없음</tt></dd></dl>
 
-<dl><dt><a name="ConnectDialog-__init__"><strong>__init__</strong></a>(self, parent<font color="#909090">=None</font>)</dt></dl>
+<dl><dt><a name="ConnectDialog-__init__"><strong>__init__</strong></a>(self, parent<font color="#909090">=None</font>)</dt><dd><tt>객체&nbsp;초기화<br>
+&nbsp;<br>
+인자:&nbsp;parent&nbsp;-&nbsp;부모&nbsp;윈도우<br>
+리턴:&nbsp;없음</tt></dd></dl>
 
 <hr>
 Methods inherited from <a href="PyQt4.QtGui.html#QDialog">PyQt4.QtGui.QDialog</a>:<br>
@@ -793,7 +806,9 @@ Data and other attributes inherited from <a href="sip.html#simplewrapper">sip.si
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="MySignalSpinBox">class <strong>MySignalSpinBox</strong></a>(<a href="PyQt4.QtGui.html#QSpinBox">PyQt4.QtGui.QSpinBox</a>)</font></td></tr>
     
-<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>SpinBox&nbsp;를&nbsp;상속하는&nbsp;클래스<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="simpleSignalConnectDlg.html#MySignalSpinBox">MySignalSpinBox</a></dd>
 <dd><a href="PyQt4.QtGui.html#QSpinBox">PyQt4.QtGui.QSpinBox</a></dd>
@@ -807,9 +822,15 @@ Data and other attributes inherited from <a href="sip.html#simplewrapper">sip.si
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="MySignalSpinBox-CountChanged"><strong>CountChanged</strong></a>(self)</dt></dl>
+<dl><dt><a name="MySignalSpinBox-CountChanged"><strong>CountChanged</strong></a>(self)</dt><dd><tt>값이&nbsp;변경&nbsp;되었을&nbsp;때,&nbsp;고유의&nbsp;시그널을&nbsp;보냄<br>
+&nbsp;<br>
+인자:&nbsp;없음<br>
+리턴:&nbsp;없음</tt></dd></dl>
 
-<dl><dt><a name="MySignalSpinBox-__init__"><strong>__init__</strong></a>(self, parent<font color="#909090">=None</font>)</dt></dl>
+<dl><dt><a name="MySignalSpinBox-__init__"><strong>__init__</strong></a>(self, parent<font color="#909090">=None</font>)</dt><dd><tt>객체&nbsp;초기화<br>
+&nbsp;<br>
+인자:&nbsp;parent&nbsp;-&nbsp;부모&nbsp;윈도우<br>
+리턴:&nbsp;없음</tt></dd></dl>
 
 <hr>
 Data and other attributes defined here:<br>
@@ -1622,7 +1643,9 @@ Data and other attributes inherited from <a href="sip.html#simplewrapper">sip.si
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="SignalDialog">class <strong>SignalDialog</strong></a>(<a href="PyQt4.QtGui.html#QDialog">PyQt4.QtGui.QDialog</a>)</font></td></tr>
     
-<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>시그널&nbsp;대화&nbsp;상자&nbsp;클래스<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="simpleSignalConnectDlg.html#SignalDialog">SignalDialog</a></dd>
 <dd><a href="PyQt4.QtGui.html#QDialog">PyQt4.QtGui.QDialog</a></dd>
@@ -1635,7 +1658,10 @@ Data and other attributes inherited from <a href="sip.html#simplewrapper">sip.si
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="SignalDialog-__init__"><strong>__init__</strong></a>(self, parent<font color="#909090">=None</font>)</dt></dl>
+<dl><dt><a name="SignalDialog-__init__"><strong>__init__</strong></a>(self, parent<font color="#909090">=None</font>)</dt><dd><tt>객체&nbsp;초기화<br>
+&nbsp;<br>
+인자:&nbsp;parent&nbsp;-&nbsp;부모&nbsp;윈도우<br>
+리턴:&nbsp;없음</tt></dd></dl>
 
 <hr>
 Methods inherited from <a href="PyQt4.QtGui.html#QDialog">PyQt4.QtGui.QDialog</a>:<br>
@@ -2357,7 +2383,9 @@ Data and other attributes inherited from <a href="sip.html#simplewrapper">sip.si
 <td colspan=3 valign=bottom>&nbsp;<br>
 <font color="#000000" face="helvetica, arial"><a name="SimpleDialog">class <strong>SimpleDialog</strong></a>(<a href="PyQt4.QtGui.html#QDialog">PyQt4.QtGui.QDialog</a>)</font></td></tr>
     
-<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>단순한&nbsp;대화&nbsp;상자&nbsp;클래스<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
 <td width="100%"><dl><dt>Method resolution order:</dt>
 <dd><a href="simpleSignalConnectDlg.html#SimpleDialog">SimpleDialog</a></dd>
 <dd><a href="PyQt4.QtGui.html#QDialog">PyQt4.QtGui.QDialog</a></dd>
@@ -2370,13 +2398,25 @@ Data and other attributes inherited from <a href="sip.html#simplewrapper">sip.si
 </dl>
 <hr>
 Methods defined here:<br>
-<dl><dt><a name="SimpleDialog-Initialize"><strong>Initialize</strong></a>(self)</dt></dl>
+<dl><dt><a name="SimpleDialog-Initialize"><strong>Initialize</strong></a>(self)</dt><dd><tt>대화&nbsp;상자를&nbsp;초기화&nbsp;해주는&nbsp;메소드<br>
+&nbsp;<br>
+인자:&nbsp;없음<br>
+리턴:&nbsp;없음</tt></dd></dl>
 
-<dl><dt><a name="SimpleDialog-LabelBold"><strong>LabelBold</strong></a>(self)</dt></dl>
+<dl><dt><a name="SimpleDialog-LabelBold"><strong>LabelBold</strong></a>(self)</dt><dd><tt>굵게&nbsp;체크&nbsp;박스를&nbsp;선택&nbsp;했을&nbsp;때,&nbsp;포맷을&nbsp;굵게&nbsp;설정해주는&nbsp;메소드<br>
+&nbsp;<br>
+인자:&nbsp;없음<br>
+리턴:&nbsp;없음</tt></dd></dl>
 
-<dl><dt><a name="SimpleDialog-UpdateLabel"><strong>UpdateLabel</strong></a>(self)</dt></dl>
+<dl><dt><a name="SimpleDialog-UpdateLabel"><strong>UpdateLabel</strong></a>(self)</dt><dd><tt>레이블을&nbsp;라인&nbsp;에디터&nbsp;값으로&nbsp;설정하는&nbsp;메소드<br>
+&nbsp;<br>
+인자:&nbsp;없음<br>
+리턴:&nbsp;없음</tt></dd></dl>
 
-<dl><dt><a name="SimpleDialog-__init__"><strong>__init__</strong></a>(self, parent<font color="#909090">=None</font>)</dt></dl>
+<dl><dt><a name="SimpleDialog-__init__"><strong>__init__</strong></a>(self, parent<font color="#909090">=None</font>)</dt><dd><tt>객체&nbsp;초기화<br>
+&nbsp;<br>
+인자:&nbsp;parent&nbsp;-&nbsp;부모&nbsp;윈도우<br>
+리턴:&nbsp;없음</tt></dd></dl>
 
 <hr>
 Methods inherited from <a href="PyQt4.QtGui.html#QDialog">PyQt4.QtGui.QDialog</a>:<br>
