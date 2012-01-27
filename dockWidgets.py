@@ -47,23 +47,23 @@ class TextEdit(QPlainTextEdit):
 
         # New Text File Action
         newTextFileAction = objCont.CreateAction(self, "새 텍스트 파일(&N)", 
-                ":newTextFileIcon.png", QKeySequence.New, 
+                ":/newTextFileIcon.png", QKeySequence.New, 
                 "새 텍스트 파일을 엽니다.", self.NewTextFile)
 
         # Open Text File Action
         openTextFileAction = objCont.CreateAction(self, "텍스트 파일 열기(&O)",
-                ":openTextFileIcon.png", QKeySequence.Open, 
+                ":/openTextFileIcon.png", QKeySequence.Open, 
                 "텍스트 파일을 엽니다.", self.OpenTextFile)
 
         # Save Text File Action
         saveTextFileAction = objCont.CreateAction(self, "텍스트 파일 저장(&S)",
-                ":saveTextFileIcon.png", QKeySequence.Save, 
+                ":/saveTextFileIcon.png", QKeySequence.Save, 
                 "텍스트 파일을 저장합니다.", self.SaveTextFile)
 
         # Save As Text File Action
         saveAsTextFileAction = objCont.CreateAction(self,
                 "다른 이름으로 텍스트 파일 저장(&A)", 
-                ":saveAsTextFileIcon.png", QKeySequence.SaveAs, 
+                ":/saveAsTextFileIcon.png", QKeySequence.SaveAs, 
                 "다른 이름으로 텍스트 파일을 저장합니다.", self.SaveAsTextFile)
         self.actions = [newTextFileAction, openTextFileAction,
                         saveTextFileAction, saveAsTextFileAction]
@@ -220,7 +220,7 @@ class ImageLabel(QLabel):
 
     imageZoom = (100, 100)
     sameZoomCheckState = False
-    image = QImage(":kubuntuLogoIcon.png")
+    image = QImage(":/kubuntuLogoIcon.png")
     actions = []
 
     def __init__(self, parent=None):
@@ -238,12 +238,12 @@ class ImageLabel(QLabel):
 
         # Open Image Action
         openImageAction = objCont.CreateAction(
-                            self, "이미지 열기", ":openImage.png",
+                            self, "이미지 열기", ":/openImage.png",
                             "Ctrl+I", "이미지를 나타냅니다", self.OpenImage)
 
         # Zoom Image Action
         zoomImageAction = objCont.CreateAction(self, "이미지 확대/축소",
-                                ":zoomImage.png", None,
+                                ":/zoomImage.png", None,
                                 "이미지를 확대하거나 축소합니다.",
                                 self.ImageZoom)
         self.actions = [openImageAction, zoomImageAction]

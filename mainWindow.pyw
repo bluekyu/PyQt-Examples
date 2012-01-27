@@ -132,58 +132,58 @@ class MainWindow(QMainWindow):
         ### Actions ###
         # Simple Dialog Open
         simpleDialogAction = objCont.CreateAction(self, "단순 대화상자",
-                                ":simpleDialogIcon.png", "Ctrl+S",
+                                ":/simpleDialogIcon.png", "Ctrl+S",
                                 "단순한 대화 상자를 엽니다",
                                 lambda: sscDlg.SimpleDialog(self).exec_())
 
         # Signal Dialog Open
         signalDialogAction = objCont.CreateAction(self, "시그널 대화상자",
-                                ":signalDialogIcon.png", "Ctrl+G",
+                                ":/signalDialogIcon.png", "Ctrl+G",
                                 "여러 시그널로 된 대화 상자를 엽니다",
                                 lambda: sscDlg.SignalDialog(self).exec_())
 
         # Connect Dialog Open
         connectDialogAction = objCont.CreateAction(self, "Connect 대화상자",
-                                ":connectDialogIcon.png", "Ctrl+E",
+                                ":/connectDialogIcon.png", "Ctrl+E",
                             "여러 연결 방식을 갖는 버튼 대화 상자를 엽니다",
                                 lambda: sscDlg.ConnectDialog(self).exec_())
 
         # Dumb Dialog Open
         dumbDialogAction = objCont.CreateAction(self, "Dumb 대화상자",
-                                ":dumbDialogIcon.png", "Ctrl+M",
+                                ":/dumbDialogIcon.png", "Ctrl+M",
                                 "Dumb 및 Modal 대화 상자를 엽니다",
                                 self.DumbCall)
 
         # Standard Dialog Open
         standardDialogAction = objCont.CreateAction(self, "Standard 대화상자",
-                                ":standardDialogIcon.png", "Ctrl+R",
+                                ":/standardDialogIcon.png", "Ctrl+R",
                                 "Standard 및 Modal 대화 상자를 엽니다",
                                 self.StandardCall)
 
         # Smart Dialog Open
         smartDialogAction = objCont.CreateAction(self, "Smart 대화상자",
-                                ":smartDialogIcon.png", "Ctrl+M",
+                                ":/smartDialogIcon.png", "Ctrl+M",
                                 "Smart 및 Modaless 대화 상자를 엽니다",
                                 self.SmartCall)
 
         # Live Dialog Open
         liveDialogAction = objCont.CreateAction(self, "Live 대화상자",
-                                ":liveDialogIcon.png", "Ctrl+L",
+                                ":/liveDialogIcon.png", "Ctrl+L",
                                 "Live 및 Modaless 대화 상자를 엽니다",
                                 self.LiveCall)
 
         # Group Action
         messageAAction = objCont.CreateAction(
-                            self, "A Action", ":iconA.png", None, None,
+                            self, "A Action", ":/iconA.png", None, None,
                             self.GroupActionMessage, True, "toggled(bool)")
         messageAAction.blockSignals(True)
         messageAAction.setChecked(True)
         messageAAction.blockSignals(False)
         messageBAction = objCont.CreateAction(
-                            self, "B Action", ":iconB.png", None, None,
+                            self, "B Action", ":/iconB.png", None, None,
                             self.GroupActionMessage, True, "toggled(bool)")
         messageCAction = objCont.CreateAction(
-                            self, "C Action", ":iconC.png", None, None,
+                            self, "C Action", ":/iconC.png", None, None,
                             self.GroupActionMessage, True, "toggled(bool)")
 
         groupAction = QActionGroup(self)
@@ -198,7 +198,7 @@ class MainWindow(QMainWindow):
 
         # Program Quit Action
         quitAction = objCont.CreateAction(
-                self, "끝내기(&Q)", ":quitApplication.png",
+                self, "끝내기(&Q)", ":/quitApplication.png",
                 QKeySequence.Quit, "프로그램을 종료합니다.", self.close)
 
         ################################################ Action Setting End ###
@@ -494,7 +494,7 @@ if __name__ == "__main__":
     app.setOrganizationName("bluekyu")
     app.setOrganizationDomain("bluekyu.me")
     app.setApplicationName(__program_name__)
-    app.setWindowIcon(QIcon(":mainIcon.png"))
+    app.setWindowIcon(QIcon(":/mainIcon.png"))
     mainWindow = MainWindow()
     mainWindow.show()
     app.exec_()
