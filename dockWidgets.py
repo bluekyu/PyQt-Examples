@@ -14,14 +14,109 @@ Dock 위젯들을 모아둔 파일
 """
 
 from os.path import dirname, basename
+import re
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import objectControl as objCont
 import qrc_resource
+import ui_findReplaceDlg
 
 __version__ = "3.4.1"
 __author__ = "YoungUk Kim"
 __date__ = "09.18.2011"
+
+class FindReplaceDialog(QDialog, ui_findReplaceDlg.Ui_FindReplaceDialog):
+    """텍스트 에디터의 찾기 및 바꾸기 대화상자"""
+    def __init__(self, text, parent=None):
+        super().__init__(parent)
+        self.text = text
+        self.index = 0
+        self.setupUi(self)
+
+        self.connect(self, SIGNAL('found'),
+                self.FoundText)
+        self.connect(self, SIGNAL('notfound'),
+                self.NotFoundText)
+        self.connect(self, SIGNAL('replace'),
+                self.ReplaceText)
+        self.connect(self, SIGNAL('replaceAll'),
+                self.ReplaceAllText)
+
+        MAC = 'qt_mac_set_native_menubar' in globals()
+        if not MAC:
+            self.findButton.setFocusPolicy(Qt.NoFocus)
+            self.replaceButton.setFocusPolicy(Qt.NoFocus)
+            self.replaceAllButton.setFocusPolicy(Qt.NoFocus)
+            self.closeButton.setFocusPolicy(Qt.NoFocus)
+        self.updateUi()
+
+    ### Slot ###
+    @pyqtSignature('QString')
+    def on_findLineEdit_textEdited(self, text):
+        self.index = 0
+        self.updateUi()
+
+    @pyqtSignature('')
+    def on_findButton_clicked(self):
+        regex = self.MakeRegex()
+        match = regex.search(self.text, self.index)
+        if match is not None:
+            self.index = match.end()
+            self.emit(SIGNAL('found'), match.start())
+        else:
+            self.emit(SIGNAL('notfound'))
+
+    @pyqtSignature('')
+    def on_replaceButton_clicked(self):
+        regex = self.MakeRegex()
+        self.text = regex.sub(self.replaceLineEdit.text(), self.text, 1)
+        self.emit(SIGNAL('replace'))
+
+    @pyqtSignature('')
+    def on_replaceAllButton_clicked(self):
+        regex = self.MakeRegex()
+        self.text = regex.sub(self.replaceLineEdit.text(), self.text)
+        self.emit(SIGNAL('replaceAll'))
+
+    ### Method ###
+    def updateUi(self):
+        enable = bool(self.findLineEdit.text())
+        self.findButton.setEnabled(enable)
+        self.replaceButton.setEnabled(enable)
+        self.replaceAllButton.setEnabled(enable)
+
+    def MakeRegex(self):
+        findText = self.findLineEdit.text()
+        if self.syntaxComboBox.currentText() == '문자열':
+            findText = re.escape(findText)
+        flags = re.MULTILINE | re.DOTALL
+        if not self.caseCheckBox.isChecked():
+            flags |= re.IGNORECASE
+        if self.wholeCheckBox.isChecked():
+            findText = r"\b%s\b" % findText
+        return re.compile(findText, flags)
+
+    def GetText(self):
+        return self.text
+
+    def FoundText(self):
+        QMessageBox.information(self, 
+                '문자열 찾음!', '일치하는 문자열을 찾았습니다!')
+
+    def NotFoundText(self):
+        QMessageBox.information(self, 
+                '더 이상 찾는 문자열 없음!', 
+                '더 이상 일치하는 문자열이 없습니다!')
+    
+    def ReplaceText(self):
+        QMessageBox.information(self,
+                '문자열 바꿈!',
+                '문자열을 바꾸었습니다!')
+
+    def ReplaceAllText(self):
+        QMessageBox.information(self,
+                '문자열 모두 바꿈!',
+                '문자열을 모두 바꾸었습니다!')
 
 class TextEdit(QPlainTextEdit):
     """텍스트 에디터 클래스"""
@@ -32,7 +127,8 @@ class TextEdit(QPlainTextEdit):
     isChangedByUser = True
     filePath = None
     recentFiles = []
-    actions = []
+    fileActions = []
+    editActions = []
 
     def __init__(self, parent=None):
         """객체 초기화
@@ -65,16 +161,33 @@ class TextEdit(QPlainTextEdit):
                 "다른 이름으로 텍스트 파일 저장(&A)", 
                 ":/saveAsTextFileIcon.png", QKeySequence.SaveAs, 
                 "다른 이름으로 텍스트 파일을 저장합니다.", self.SaveAsTextFile)
-        self.actions = [newTextFileAction, openTextFileAction,
+
+        # Find and Replace Action
+        findReplaceAction = objCont.CreateAction(self,
+                "텍스트 찾기 및 바꾸기(&F)",
+                None, QKeySequence.Find,
+                "텍스트에서 단어를 찾거나 바꿉니다.", self.FindReplace) 
+
+        self.fileActions = [newTextFileAction, openTextFileAction,
                         saveTextFileAction, saveAsTextFileAction]
+        self.editActions = [findReplaceAction]
 
         # Plain Text Edit Context Menu
         self.titleLabel.setContextMenuPolicy(Qt.ActionsContextMenu)
-        objCont.AddActions(self.titleLabel, self.actions)
+        separator = QAction(self)
+        separator.setSeparator(True)
+        objCont.AddActions(self.titleLabel, 
+                self.fileActions + [separator] + self.editActions)
 
         self.connect(self, SIGNAL("textChanged()"), self.UserChange)
 
     ################################################################ Method ###
+
+    def FindReplace(self):
+        findReplaceDialog = FindReplaceDialog(self.toPlainText(), self)
+        findReplaceDialog.exec_()
+        self.clear()
+        self.setPlainText(findReplaceDialog.GetText())
 
     def UserChange(self):
         """사용자가 텍스트를 변경시켰을 때에만, 텍스트 변경 여부 작동.

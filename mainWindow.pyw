@@ -217,7 +217,7 @@ class MainWindow(QMainWindow):
         # Plain Text Edit Dock Widget
         self.textEdit = dock.TextEdit()
 
-        self.textEditDock = QDockWidget(self)
+        self.textEditDock = QDockWidget("텍스트 에디터 Dock", self)
         self.textEditDock.setObjectName("PlainTextEditDockWidget")
         self.textEditDock.setTitleBarWidget(self.textEdit.titleLabel)
         self.textEditDock.setWidget(self.textEdit)
@@ -235,9 +235,9 @@ class MainWindow(QMainWindow):
 
         # File
         fileMenu = QMenu()
-        objCont.AddActions(fileMenu, (self.textEdit.actions[0], None,
-                self.textEdit.actions[1], self.textEditRecentFilesMenu,
-                None, self.textEdit.actions[2], self.textEdit.actions[3],
+        objCont.AddActions(fileMenu, (self.textEdit.fileActions[0], None,
+                self.textEdit.fileActions[1], self.textEditRecentFilesMenu,
+                None, self.textEdit.fileActions[2], self.textEdit.fileActions[3],
                 None, quitAction))
         fileMenuAction = objCont.CreateAction(self, "파일(&F)", None, None, 
                 "파일의 열기 및 저장 등을 포함합니다")
@@ -255,13 +255,14 @@ class MainWindow(QMainWindow):
         dialogMenuAction.setMenu(dialogMenu)
         self.menuBar().addAction(dialogMenuAction)
 
-        # Image
-        imageMenu = QMenu()
-        objCont.AddActions(imageMenu, self.imageLabel.actions)
-        imageMenuAction = objCont.CreateAction(self, "이미지(&M)", None, None,
-                "이미지를 조절합니다")
-        imageMenuAction.setMenu(imageMenu)
-        self.menuBar().addAction(imageMenuAction)
+        # Edit
+        editMenu = QMenu()
+        objCont.AddActions(editMenu, 
+                self.imageLabel.actions + [None] + self.textEdit.editActions)
+        editMenuAction = objCont.CreateAction(self, "편집(&E)", None, None,
+                "텍스트 에디터나 이미지를 편집합니다")
+        editMenuAction.setMenu(editMenu)
+        self.menuBar().addAction(editMenuAction)
 
         # Help
         aboutMenu = QMenu()

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>388</width>
-    <height>147</height>
+    <height>146</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -37,12 +37,12 @@
           <string>바꿀 단어:</string>
          </property>
          <property name="buddy">
-          <cstring>replcaeLineEdit</cstring>
+          <cstring>replaceLineEdit</cstring>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="replcaeLineEdit"/>
+        <widget class="QLineEdit" name="replaceLineEdit"/>
        </item>
       </layout>
      </item>
@@ -51,14 +51,14 @@
        <item>
         <widget class="QCheckBox" name="caseCheckBox">
          <property name="text">
-          <string>Case Sensitive</string>
+          <string>대소문자 구별</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QCheckBox" name="wholeCheckBox">
          <property name="text">
-          <string>Whole Words</string>
+          <string>단어 단위로 찾기</string>
          </property>
          <property name="checked">
           <bool>false</bool>
@@ -164,6 +164,17 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>findLineEdit</tabstop>
+  <tabstop>replaceLineEdit</tabstop>
+  <tabstop>caseCheckBox</tabstop>
+  <tabstop>wholeCheckBox</tabstop>
+  <tabstop>syntaxComboBox</tabstop>
+  <tabstop>findButton</tabstop>
+  <tabstop>replaceButton</tabstop>
+  <tabstop>replaceAllButton</tabstop>
+  <tabstop>closeButton</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
